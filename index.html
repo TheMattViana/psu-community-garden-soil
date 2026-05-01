@@ -1440,8 +1440,14 @@
     <!-- ===================== STEP 5: PLANT GUIDE ===================== -->
     <section class="step" data-step="5">
       <div class="eyebrow reveal">What to plant</div>
-      <h2 class="reveal delay-1">Pick crops that <em>eat</em> the excess.</h2>
-      <p class="reveal delay-2">The fastest way to bring soil back into balance is to plant heavy feeders. They pull nitrogen, phosphorus, calcium, and magnesium out of the soil as they grow. Filter by season, then click any crop to see how it'll do.</p>
+      <h2 class="reveal delay-1">Pick what to <em>grow</em>.</h2>
+      <p class="reveal delay-2">Heavy-feeding vegetables help draw soil nutrients down toward balance. Flowers don't need to draw down — they just need to tolerate your soil's high pH and rich organic matter. Filter by category and season, then click any to see how it'll do.</p>
+      <div class="plant-filter reveal delay-3">
+        <span class="plant-filter-label">Type:</span>
+        <button class="plant-filter-btn active" data-type="all">All</button>
+        <button class="plant-filter-btn" data-type="vegetable">Vegetables</button>
+        <button class="plant-filter-btn" data-type="flower">Flowers</button>
+      </div>
       <div class="plant-filter reveal delay-3">
         <span class="plant-filter-label">When:</span>
         <button class="plant-filter-btn active" data-season="all">All seasons</button>
@@ -1469,12 +1475,13 @@
           <p>Brassicas (broccoli, kale, cabbage), leafy greens, tomatoes, asparagus. They thrive in rich soil and pull excess nutrients out.</p>
         </li>
         <li class="action-item">
-          <h4>Pull EVERYTHING out before winter — don't let it decompose in your plot</h4>
-          <p>When each crop finishes, and especially when the season ends, pull every plant out by the roots. Stems, leaves, roots, fallen fruit — all of it. Take it to the central compost pile, never leave it in your plot. <strong>Don't chop-and-drop. Don't leave "just the leaves" to mulch in place.</strong> Anything that decomposes in your plot recycles its nutrients straight back into already-saturated soil. The fall cleanup is the most important one — clear the plot completely before the cold sets in.</p>
+          <h4>Pull every annual out before winter — don't let it decompose in your plot</h4>
+          <p>When each annual finishes, and especially when the season ends, pull the whole plant out by the roots. Stems, leaves, roots, fallen fruit — all of it. Take it to the central compost pile, never leave it in your plot. <strong>Don't chop-and-drop. Don't leave "just the leaves" to mulch in place.</strong> Anything that decomposes in your plot recycles its nutrients straight back into already-saturated soil. The fall cleanup is the most important one — clear all the annuals before the cold sets in.</p>
+          <p style="margin-top:10px;padding:10px 14px;background:rgba(82,183,136,0.10);border-left:2.5px solid var(--leaf-mid);border-radius:8px;font-size:15px;"><strong>Leave perennials alone.</strong> Asparagus, rhubarb, garlic that\'s overwintering, peonies, irises, daffodils, tulips, black-eyed Susans, and coneflowers come back every year — don\'t pull them. You can cut their dead foliage back if you want, but let the roots/bulbs go dormant in place.</p>
         </li>
         <li class="action-item">
-          <h4>Plant a cereal cover crop after the fall cleanup</h4>
-          <p>Once the plot is cleared, sow winter rye, oats, or wheat. They scavenge leftover nutrients through fall and winter, prevent erosion, and build soil structure with their roots. Cut them down and remove the biomass next spring before they go to seed — same rule, the cuttings go to the central compost pile, not back into your plot.</p>
+          <h4>Plant a cereal cover crop in the cleared spaces</h4>
+          <p>Once your annuals are out, sow winter rye, oats, or wheat in the open ground around any perennials. They scavenge leftover nutrients through fall and winter, prevent erosion, and build soil structure with their roots. Cut them down and remove the biomass next spring before they go to seed — same rule, the cuttings go to the central compost pile, not back into your plot.</p>
         </li>
       </ol>
 
@@ -1715,7 +1722,39 @@
     { id: 'blueberry', name: 'Blueberries', verdict: 'avoid', icon: 'blueberry', seasons: ['summer'],
       reason: 'Need pH below 5.5 to absorb iron. They\'ll yellow and stunt at this garden\'s pH of 7.1. Not a good fit for any plot here.' },
     { id: 'medherb', name: 'Mediterranean herbs', verdict: 'avoid', icon: 'medherb', seasons: ['spring','summer','fall'],
-      reason: 'Rosemary, thyme, oregano, sage, lavender. They actually love your alkaline pH — but they evolved on lean, sandy, well-drained slopes and hate rich organic soil. In your plot they grow weak and rot at the crown, especially during wet PA springs. Skip them.' }
+      reason: 'Rosemary, thyme, oregano, sage, lavender. They actually love your alkaline pH — but they evolved on lean, sandy, well-drained slopes and hate rich organic soil. In your plot they grow weak and rot at the crown, especially during wet PA springs. Skip them.' },
+
+    // ===== FLOWERS =====
+    { id: 'sunflower', name: 'Sunflowers', verdict: 'thrives', icon: 'sunflower', type: 'flower', seasons: ['summer'],
+      reason: 'Heavy feeders with very deep taproots — they reach down and pull nutrients up from the subsoil. Cut and remove them at season end and you\'ve drawn fertility OUT of your plot. One of the best soil-rebalancing flowers you can plant. Direct seed late May.' },
+    { id: 'zinnia', name: 'Zinnias', verdict: 'thrives', icon: 'zinnia', type: 'flower', seasons: ['summer','fall'],
+      reason: 'Heavy feeder that performs spectacularly in this garden. Long-lasting cut flowers in every color imaginable. Direct seed late May, blooms July through hard frost.' },
+    { id: 'marigold', name: 'Marigolds', verdict: 'thrives', icon: 'marigold', type: 'flower', seasons: ['summer','fall'],
+      reason: 'Tolerate wide pH and love rich soil. Bloom continuously June through frost. Many gardeners interplant them with vegetables — there\'s decent evidence they discourage some soil pests. Direct seed late May or transplant.' },
+    { id: 'snap', name: 'Snapdragons', verdict: 'thrives', icon: 'snap', type: 'flower', seasons: ['spring','fall'],
+      reason: 'Cool-season flower that prefers slightly alkaline pH (6.5–7.5) — your soil is in their sweet spot. Bloom March–June, then again September–October. Pinch the top once they\'re six inches tall for bushier plants.' },
+    { id: 'calendula', name: 'Calendula', verdict: 'thrives', icon: 'calendula', type: 'flower', seasons: ['spring','summer','fall'],
+      reason: 'Cottage-garden classic that tolerates alkaline pH and rich soil. Blooms from spring through frost. Self-seeds, comes back next year on its own. Edible petals — beautiful in salads.' },
+    { id: 'rudbeckia', name: 'Black-eyed Susans', verdict: 'thrives', icon: 'rudbeckia', type: 'flower', seasons: ['summer','fall'],
+      reason: 'PA native prairie perennial. Wide pH tolerance, drought-resistant once established, blooms July through frost. Pollinator magnet. Plant once, comes back every year — leave them in place during your fall cleanup.' },
+    { id: 'echinacea', name: 'Coneflowers', verdict: 'thrives', icon: 'echinacea', type: 'flower', seasons: ['summer'],
+      reason: 'Native perennial that tolerates alkaline pH well. Drought-tolerant, blooms June–August. Birds eat the seed heads through fall and winter. Don\'t pull these in your fall cleanup — they\'re perennial.' },
+    { id: 'peony', name: 'Peonies', verdict: 'thrives', icon: 'peony', type: 'flower', seasons: ['spring'],
+      reason: 'Long-lived perennial that prefers neutral to slightly alkaline pH (6.5–7.5) — perfect match for your soil. Plant tubers in fall, blooms May–June. Some heritage peonies in PA gardens are over 100 years old.' },
+    { id: 'iris', name: 'Bearded iris', verdict: 'thrives', icon: 'iris', type: 'flower', seasons: ['spring'],
+      reason: 'Perfect for alkaline soil — they actually prefer pH slightly above 7. Plant rhizomes shallowly in late summer, blooms May–June every year. Drought-tolerant once established. Don\'t pull in fall cleanup.' },
+    { id: 'daffodil', name: 'Daffodils', verdict: 'thrives', icon: 'daffodil', type: 'flower', seasons: ['spring'],
+      reason: 'Tolerate wide pH including yours. Plant bulbs in October, bloom March–April every year. Squirrels and deer leave them alone. Don\'t pull in your cleanup — they need to gather energy through their leaves until June.' },
+    { id: 'tulip', name: 'Tulips', verdict: 'thrives', icon: 'tulip', type: 'flower', seasons: ['spring'],
+      reason: 'Tolerate alkaline pH (your 7.1 is just slightly above their ideal 6.0–7.0, but they\'ll bloom). Plant bulbs in October, bloom April–May. Note: many tulip varieties decline after the second year regardless of soil — that\'s normal, not a soil issue.' },
+    { id: 'hydrangea', name: 'Hydrangeas', verdict: 'maybe', icon: 'hydrangea', type: 'flower', seasons: ['summer'],
+      reason: 'Hydrangeas grow fine in alkaline soil — but they bloom pink or purple. Acidic soil is what gives the famous blue color. The shrub itself does well; just don\'t expect blue flowers here. Don\'t pull them in fall cleanup; they\'re perennial.' },
+    { id: 'azalea', name: 'Azaleas & rhododendrons', verdict: 'avoid', icon: 'azalea', type: 'flower', seasons: ['spring'],
+      reason: 'Need pH below 5.5 to absorb iron. They\'ll yellow, stunt, and slowly die at this garden\'s pH 7.1. Skip them — these belong in landscape beds, not a community garden plot.' },
+    { id: 'bleedh', name: 'Bleeding hearts', verdict: 'avoid', icon: 'bleedh', type: 'flower', seasons: ['spring'],
+      reason: 'Prefer slightly acidic soil. At 7.1 they often develop iron chlorosis (yellow leaves) and produce fewer blooms. Beautiful in cooler woodland gardens with acidic soil — not here.' },
+    { id: 'astilbe', name: 'Astilbe', verdict: 'avoid', icon: 'astilbe', type: 'flower', seasons: ['summer'],
+      reason: 'Acid-loving woodland perennial. Yellow leaves and weak feathery plumes in alkaline soil. Skip it in your plot.' }
   ];
 
   const explainTexts = {
@@ -2015,10 +2054,30 @@
     turnip:    '<svg viewBox="0 0 48 48"><circle cx="24" cy="30" r="11" fill="#fef3e0" stroke="#a07b50" stroke-width="0.6"/><path d="M 13 30 Q 14 22 24 22 Q 34 22 35 30 Q 28 25 24 25 Q 20 25 13 30 Z" fill="#9333ea"/><path d="M 22 22 L 20 8 M 26 22 L 26 6 M 24 22 L 24 4 M 28 22 L 30 8" stroke="#52b788" stroke-width="2" stroke-linecap="round"/><path d="M 24 41 L 24 44" stroke="#a07b50" stroke-width="1"/></svg>',
     strawberry:'<svg viewBox="0 0 48 48"><path d="M 18 18 Q 24 14 30 18 Q 32 26 24 40 Q 16 26 18 18 Z" fill="#dc2626"/><circle cx="22" cy="24" r="0.9" fill="#fef3e0"/><circle cx="26" cy="22" r="0.9" fill="#fef3e0"/><circle cx="24" cy="28" r="0.9" fill="#fef3e0"/><circle cx="20" cy="30" r="0.9" fill="#fef3e0"/><circle cx="28" cy="28" r="0.9" fill="#fef3e0"/><circle cx="22" cy="34" r="0.9" fill="#fef3e0"/><circle cx="26" cy="34" r="0.9" fill="#fef3e0"/><path d="M 18 18 L 14 14 M 24 16 L 24 8 M 30 18 L 34 14 M 22 17 L 20 11 M 26 17 L 28 11" stroke="#52b788" stroke-width="2" stroke-linecap="round"/></svg>',
     raspberry: '<svg viewBox="0 0 48 48"><circle cx="20" cy="24" r="3.6" fill="#dc2626"/><circle cx="28" cy="24" r="3.6" fill="#dc2626"/><circle cx="24" cy="28" r="3.6" fill="#b91c1c"/><circle cx="20" cy="32" r="3.6" fill="#dc2626"/><circle cx="28" cy="32" r="3.6" fill="#b91c1c"/><circle cx="24" cy="36" r="3.6" fill="#dc2626"/><circle cx="19" cy="23" r="0.9" fill="#fca5a5" opacity="0.7"/><circle cx="27" cy="23" r="0.9" fill="#fca5a5" opacity="0.7"/><path d="M 20 21 Q 18 14 14 12 M 28 21 Q 30 14 34 12 M 24 20 Q 24 12 24 8" stroke="#52b788" stroke-width="2" stroke-linecap="round"/></svg>',
-    medherb:   '<svg viewBox="0 0 48 48"><path d="M 24 44 L 24 8" stroke="#1b4332" stroke-width="2" stroke-linecap="round"/><path d="M 24 38 L 18 36 M 24 36 L 30 34 M 24 32 L 18 30 M 24 30 L 30 28 M 24 26 L 18 24 M 24 24 L 30 22 M 24 20 L 18 18 M 24 18 L 30 16 M 24 14 L 19 12 M 24 12 L 29 10" stroke="#52b788" stroke-width="1.6" stroke-linecap="round"/><path d="M 24 8 Q 21 5 24 4 Q 27 5 24 8" fill="#52b788"/><circle cx="22" cy="6" r="1" fill="#a78bfa"/><circle cx="26" cy="6" r="1" fill="#a78bfa"/></svg>'
+    medherb:   '<svg viewBox="0 0 48 48"><path d="M 24 44 L 24 8" stroke="#1b4332" stroke-width="2" stroke-linecap="round"/><path d="M 24 38 L 18 36 M 24 36 L 30 34 M 24 32 L 18 30 M 24 30 L 30 28 M 24 26 L 18 24 M 24 24 L 30 22 M 24 20 L 18 18 M 24 18 L 30 16 M 24 14 L 19 12 M 24 12 L 29 10" stroke="#52b788" stroke-width="1.6" stroke-linecap="round"/><path d="M 24 8 Q 21 5 24 4 Q 27 5 24 8" fill="#52b788"/><circle cx="22" cy="6" r="1" fill="#a78bfa"/><circle cx="26" cy="6" r="1" fill="#a78bfa"/></svg>',
+
+    // ----- Flowers -----
+    sunflower: '<svg viewBox="0 0 48 48"><ellipse cx="24" cy="13" rx="3" ry="7" fill="#ffb703"/><ellipse cx="32" cy="16" rx="6.5" ry="3" fill="#fb8500" transform="rotate(40 32 16)"/><ellipse cx="35" cy="24" rx="3" ry="7" fill="#ffb703" transform="rotate(90 35 24)"/><ellipse cx="32" cy="32" rx="6.5" ry="3" fill="#fb8500" transform="rotate(140 32 32)"/><ellipse cx="24" cy="35" rx="3" ry="7" fill="#ffb703"/><ellipse cx="16" cy="32" rx="6.5" ry="3" fill="#fb8500" transform="rotate(-140 16 32)"/><ellipse cx="13" cy="24" rx="3" ry="7" fill="#ffb703" transform="rotate(90 13 24)"/><ellipse cx="16" cy="16" rx="6.5" ry="3" fill="#fb8500" transform="rotate(-40 16 16)"/><circle cx="24" cy="24" r="6" fill="#6b4423"/><circle cx="24" cy="24" r="6" fill="none" stroke="#3b2412" stroke-width="0.8"/></svg>',
+    zinnia:    '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="14" fill="#ec4899"/><ellipse cx="24" cy="14" rx="3" ry="6" fill="#f472b6"/><ellipse cx="34" cy="20" rx="6" ry="3" fill="#f472b6"/><ellipse cx="34" cy="28" rx="6" ry="3" fill="#f472b6"/><ellipse cx="24" cy="34" rx="3" ry="6" fill="#f472b6"/><ellipse cx="14" cy="28" rx="6" ry="3" fill="#f472b6"/><ellipse cx="14" cy="20" rx="6" ry="3" fill="#f472b6"/><ellipse cx="32" cy="14" rx="3" ry="5" fill="#fbcfe8" transform="rotate(45 32 14)"/><ellipse cx="32" cy="34" rx="3" ry="5" fill="#fbcfe8" transform="rotate(-45 32 34)"/><ellipse cx="16" cy="14" rx="3" ry="5" fill="#fbcfe8" transform="rotate(-45 16 14)"/><ellipse cx="16" cy="34" rx="3" ry="5" fill="#fbcfe8" transform="rotate(45 16 34)"/><circle cx="24" cy="24" r="4" fill="#fbbf24"/><circle cx="24" cy="24" r="2" fill="#9a3412"/></svg>',
+    marigold:  '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="13" fill="#fb8500"/><circle cx="24" cy="17" r="3.5" fill="#ffb703"/><circle cx="18" cy="22" r="3.5" fill="#ffb703"/><circle cx="30" cy="22" r="3.5" fill="#ffb703"/><circle cx="20" cy="29" r="3.5" fill="#ffb703"/><circle cx="28" cy="29" r="3.5" fill="#ffb703"/><circle cx="24" cy="24" r="3.5" fill="#dc2626"/><path d="M 12 38 Q 16 36 18 32 M 36 38 Q 32 36 30 32" stroke="#52b788" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+    snap:      '<svg viewBox="0 0 48 48"><path d="M 24 44 L 24 12" stroke="#52b788" stroke-width="2"/><path d="M 18 14 Q 14 10 18 6 Q 24 8 24 12 Q 24 8 30 6 Q 34 10 30 14 Q 27 16 24 14 Z" fill="#dc2626"/><path d="M 18 22 Q 14 18 18 14 Q 24 16 24 20 Q 24 16 30 14 Q 34 18 30 22 Q 27 24 24 22 Z" fill="#f472b6"/><path d="M 18 30 Q 14 26 18 22 Q 24 24 24 28 Q 24 24 30 22 Q 34 26 30 30 Q 27 32 24 30 Z" fill="#dc2626"/><path d="M 18 36 Q 14 34 18 30 Q 24 31 24 34 Q 24 31 30 30 Q 34 34 30 36" fill="#f472b6"/><path d="M 18 38 Q 12 34 18 30 M 30 38 Q 36 34 30 30" stroke="#52b788" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>',
+    calendula: '<svg viewBox="0 0 48 48"><ellipse cx="24" cy="12" rx="3" ry="6" fill="#fb8500"/><ellipse cx="32" cy="16" rx="5.5" ry="3" fill="#ffb703" transform="rotate(45 32 16)"/><ellipse cx="36" cy="24" rx="3" ry="6" fill="#fb8500" transform="rotate(90 36 24)"/><ellipse cx="32" cy="32" rx="5.5" ry="3" fill="#ffb703" transform="rotate(135 32 32)"/><ellipse cx="24" cy="36" rx="3" ry="6" fill="#fb8500"/><ellipse cx="16" cy="32" rx="5.5" ry="3" fill="#ffb703" transform="rotate(-135 16 32)"/><ellipse cx="12" cy="24" rx="3" ry="6" fill="#fb8500" transform="rotate(90 12 24)"/><ellipse cx="16" cy="16" rx="5.5" ry="3" fill="#ffb703" transform="rotate(-45 16 16)"/><circle cx="24" cy="24" r="5" fill="#9a3412"/><circle cx="24" cy="24" r="2" fill="#fbbf24"/></svg>',
+    rudbeckia: '<svg viewBox="0 0 48 48"><ellipse cx="24" cy="12" rx="3" ry="7" fill="#ffb703"/><ellipse cx="33" cy="15" rx="6.5" ry="3" fill="#ffb703" transform="rotate(40 33 15)"/><ellipse cx="36" cy="24" rx="3" ry="7" fill="#ffb703" transform="rotate(90 36 24)"/><ellipse cx="33" cy="33" rx="6.5" ry="3" fill="#ffb703" transform="rotate(140 33 33)"/><ellipse cx="24" cy="36" rx="3" ry="7" fill="#ffb703"/><ellipse cx="15" cy="33" rx="6.5" ry="3" fill="#ffb703" transform="rotate(-140 15 33)"/><ellipse cx="12" cy="24" rx="3" ry="7" fill="#ffb703" transform="rotate(90 12 24)"/><ellipse cx="15" cy="15" rx="6.5" ry="3" fill="#ffb703" transform="rotate(-40 15 15)"/><circle cx="24" cy="24" r="5.5" fill="#3b2412"/><circle cx="22" cy="22" r="0.7" fill="#1a1a1a"/><circle cx="26" cy="22" r="0.7" fill="#1a1a1a"/><circle cx="24" cy="26" r="0.7" fill="#1a1a1a"/></svg>',
+    echinacea: '<svg viewBox="0 0 48 48"><ellipse cx="24" cy="13" rx="3" ry="6" fill="#c084fc"/><ellipse cx="32" cy="16" rx="5.5" ry="3" fill="#c084fc" transform="rotate(40 32 16)"/><ellipse cx="35" cy="24" rx="3" ry="6" fill="#c084fc" transform="rotate(90 35 24)"/><ellipse cx="32" cy="32" rx="5.5" ry="3" fill="#c084fc" transform="rotate(140 32 32)"/><ellipse cx="24" cy="35" rx="3" ry="6" fill="#c084fc"/><ellipse cx="16" cy="32" rx="5.5" ry="3" fill="#c084fc" transform="rotate(-140 16 32)"/><ellipse cx="13" cy="24" rx="3" ry="6" fill="#c084fc" transform="rotate(90 13 24)"/><ellipse cx="16" cy="16" rx="5.5" ry="3" fill="#c084fc" transform="rotate(-40 16 16)"/><ellipse cx="24" cy="24" rx="5.5" ry="6.5" fill="#fb8500"/><circle cx="22" cy="22" r="0.6" fill="#3b2412"/><circle cx="26" cy="22" r="0.6" fill="#3b2412"/><circle cx="22" cy="25" r="0.6" fill="#3b2412"/><circle cx="26" cy="25" r="0.6" fill="#3b2412"/><circle cx="24" cy="27" r="0.6" fill="#3b2412"/></svg>',
+    peony:     '<svg viewBox="0 0 48 48"><circle cx="24" cy="25" r="14" fill="#fda4af"/><circle cx="24" cy="18" r="6" fill="#f9a8d4"/><circle cx="17" cy="23" r="5" fill="#f9a8d4"/><circle cx="31" cy="23" r="5" fill="#f9a8d4"/><circle cx="20" cy="30" r="5" fill="#fbcfe8"/><circle cx="28" cy="30" r="5" fill="#fbcfe8"/><circle cx="24" cy="33" r="4.5" fill="#fbcfe8"/><circle cx="24" cy="24" r="3.5" fill="#fde68a"/><circle cx="24" cy="24" r="2" fill="#fbbf24"/></svg>',
+    iris:      '<svg viewBox="0 0 48 48"><path d="M 24 8 Q 21 12 24 18" stroke="#7c3aed" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M 24 20 Q 18 22 14 30 Q 12 38 18 38 Q 24 36 24 28" fill="#a855f7"/><path d="M 24 20 Q 30 22 34 30 Q 36 38 30 38 Q 24 36 24 28" fill="#7c3aed"/><path d="M 24 20 Q 24 28 24 38" stroke="#6d28d9" stroke-width="5" stroke-linecap="round"/><rect x="22" y="28" width="4" height="6" fill="#fbbf24" rx="1"/><path d="M 24 12 L 24 4" stroke="#52b788" stroke-width="2"/></svg>',
+    daffodil:  '<svg viewBox="0 0 48 48"><ellipse cx="24" cy="14" rx="3" ry="5" fill="#fbbf24"/><ellipse cx="34" cy="20" rx="5" ry="3" fill="#fbbf24"/><ellipse cx="14" cy="20" rx="5" ry="3" fill="#fbbf24"/><ellipse cx="24" cy="28" rx="3" ry="5" fill="#fbbf24"/><ellipse cx="31" cy="14" rx="3.5" ry="3" fill="#fbbf24" transform="rotate(45 31 14)"/><ellipse cx="17" cy="14" rx="3.5" ry="3" fill="#fbbf24" transform="rotate(-45 17 14)"/><circle cx="24" cy="21" r="6" fill="#fb8500"/><circle cx="24" cy="21" r="3.5" fill="#9a3412"/><path d="M 24 34 L 24 44 M 22 30 L 18 38" stroke="#52b788" stroke-width="2" stroke-linecap="round"/></svg>',
+    tulip:     '<svg viewBox="0 0 48 48"><path d="M 18 14 Q 14 18 16 28 Q 18 36 24 36 Q 30 36 32 28 Q 34 18 30 14 Q 28 18 24 18 Q 20 18 18 14 Z" fill="#dc2626"/><path d="M 24 18 Q 24 28 24 36" stroke="#9a1c1c" stroke-width="0.8"/><path d="M 18 14 Q 18 10 22 12 M 30 14 Q 30 10 26 12" stroke="#9a1c1c" stroke-width="0.8" fill="none"/><path d="M 24 36 L 24 44" stroke="#52b788" stroke-width="2"/><path d="M 22 32 Q 16 28 14 38" stroke="#52b788" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>',
+    hydrangea: '<svg viewBox="0 0 48 48"><circle cx="20" cy="20" r="4" fill="#a5b4fc"/><circle cx="28" cy="20" r="4" fill="#c4b5fd"/><circle cx="16" cy="26" r="4" fill="#c4b5fd"/><circle cx="24" cy="24" r="4" fill="#a5b4fc"/><circle cx="32" cy="26" r="4" fill="#a5b4fc"/><circle cx="20" cy="30" r="4" fill="#c4b5fd"/><circle cx="28" cy="30" r="4" fill="#a5b4fc"/><circle cx="24" cy="34" r="4" fill="#c4b5fd"/><circle cx="20" cy="20" r="1.2" fill="#fef3c7"/><circle cx="28" cy="20" r="1.2" fill="#fef3c7"/><circle cx="24" cy="24" r="1.2" fill="#fef3c7"/><circle cx="32" cy="26" r="1.2" fill="#fef3c7"/><circle cx="20" cy="30" r="1.2" fill="#fef3c7"/><circle cx="28" cy="30" r="1.2" fill="#fef3c7"/><circle cx="16" cy="26" r="1.2" fill="#fef3c7"/><circle cx="24" cy="34" r="1.2" fill="#fef3c7"/><path d="M 14 16 Q 8 14 10 22 Q 16 22 18 18" fill="#52b788"/><path d="M 34 16 Q 40 14 38 22 Q 32 22 30 18" fill="#52b788"/></svg>',
+    azalea:    '<svg viewBox="0 0 48 48"><path d="M 18 18 Q 14 22 18 26 Q 22 24 22 20 Z" fill="#f472b6"/><path d="M 30 18 Q 34 22 30 26 Q 26 24 26 20 Z" fill="#f472b6"/><path d="M 18 30 Q 14 26 18 22 Q 22 24 22 28 Z" fill="#ec4899"/><path d="M 30 30 Q 34 26 30 22 Q 26 24 26 28 Z" fill="#ec4899"/><path d="M 22 14 Q 24 10 26 14 Q 26 18 24 18 Q 22 18 22 14 Z" fill="#f472b6"/><path d="M 22 34 Q 24 38 26 34 Q 26 30 24 30 Q 22 30 22 34 Z" fill="#ec4899"/><circle cx="24" cy="24" r="4" fill="#fbcfe8"/><circle cx="24" cy="24" r="1.5" fill="#fbbf24"/><path d="M 14 14 L 10 12 M 34 14 L 38 12" stroke="#2d6a4f" stroke-width="2" stroke-linecap="round"/></svg>',
+    bleedh:    '<svg viewBox="0 0 48 48"><path d="M 24 8 L 24 16 Q 14 16 14 26 L 14 32" stroke="#2d6a4f" stroke-width="1.5" fill="none"/><path d="M 24 12 L 24 20 Q 24 22 24 22" stroke="#2d6a4f" stroke-width="1.5" fill="none"/><path d="M 24 8 L 24 16 Q 34 16 34 26 L 34 32" stroke="#2d6a4f" stroke-width="1.5" fill="none"/><path d="M 14 32 Q 9 32 10 38 Q 14 42 18 38 Q 19 32 14 32 Z" fill="#ec4899"/><path d="M 14 38 L 14 42" stroke="#fbcfe8" stroke-width="1.4"/><path d="M 24 22 Q 19 22 20 28 Q 24 32 28 28 Q 29 22 24 22 Z" fill="#f472b6"/><path d="M 24 28 L 24 32" stroke="#fbcfe8" stroke-width="1.2"/><path d="M 34 32 Q 29 32 30 38 Q 34 42 38 38 Q 39 32 34 32 Z" fill="#ec4899"/><path d="M 34 38 L 34 42" stroke="#fbcfe8" stroke-width="1.4"/></svg>',
+    astilbe:   '<svg viewBox="0 0 48 48"><path d="M 24 44 L 24 28" stroke="#2d6a4f" stroke-width="2"/><path d="M 24 30 Q 18 26 14 14 Q 18 14 22 22 Q 24 24 24 28" fill="#fbcfe8"/><path d="M 24 30 Q 30 26 34 14 Q 30 14 26 22 Q 24 24 24 28" fill="#f9a8d4"/><path d="M 24 28 Q 22 18 22 8 Q 26 10 26 18 Q 24 24 24 28" fill="#fbcfe8"/><circle cx="20" cy="16" r="1" fill="#ec4899"/><circle cx="24" cy="12" r="1" fill="#ec4899"/><circle cx="28" cy="16" r="1" fill="#ec4899"/><circle cx="22" cy="22" r="1" fill="#ec4899"/><circle cx="26" cy="22" r="1" fill="#ec4899"/></svg>'
   };
 
   let currentSeason = 'all';
+  let currentType = 'all';
+
+  function plantType(p) { return p.type || 'vegetable'; }
 
   function seasonLabel(seasons) {
     if (!seasons || seasons.length === 0) return '';
@@ -2028,12 +2087,14 @@
 
   function buildPlantGrid() {
     const grid = document.getElementById('plantGrid');
-    const filtered = currentSeason === 'all'
-      ? plants
-      : plants.filter(p => p.seasons && p.seasons.includes(currentSeason));
+    const filtered = plants.filter(p => {
+      const matchType = currentType === 'all' || plantType(p) === currentType;
+      const matchSeason = currentSeason === 'all' || (p.seasons && p.seasons.includes(currentSeason));
+      return matchType && matchSeason;
+    });
 
     if (filtered.length === 0) {
-      grid.innerHTML = '<div class="plant-empty">No crops match this filter.</div>';
+      grid.innerHTML = '<div class="plant-empty">Nothing matches both filters. Try widening one.</div>';
       return;
     }
 
@@ -2050,9 +2111,17 @@
     });
   }
 
-  function filterPlants(season) {
+  function filterByType(type) {
+    currentType = type;
+    document.querySelectorAll('.plant-filter-btn[data-type]').forEach(b => {
+      b.classList.toggle('active', b.dataset.type === type);
+    });
+    buildPlantGrid();
+  }
+
+  function filterBySeason(season) {
     currentSeason = season;
-    document.querySelectorAll('.plant-filter-btn').forEach(b => {
+    document.querySelectorAll('.plant-filter-btn[data-season]').forEach(b => {
       b.classList.toggle('active', b.dataset.season === season);
     });
     buildPlantGrid();
@@ -2097,7 +2166,10 @@
     tab.addEventListener('click', () => showStep(parseInt(tab.dataset.jump)));
   });
   document.querySelectorAll('.plant-filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => filterPlants(btn.dataset.season));
+    btn.addEventListener('click', () => {
+      if (btn.dataset.type) filterByType(btn.dataset.type);
+      else if (btn.dataset.season) filterBySeason(btn.dataset.season);
+    });
   });
   document.getElementById('explain-btn').addEventListener('click', toggleExplain);
 

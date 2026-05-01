@@ -1469,16 +1469,12 @@
           <p>Brassicas (broccoli, kale, cabbage), leafy greens, tomatoes, asparagus. They thrive in rich soil and pull excess nutrients out.</p>
         </li>
         <li class="action-item">
-          <h4>Pull plants at season end — don't chop and drop</h4>
-          <p>Remove plant material from your plot and add it to the central compost pile. Don't recycle nutrients straight back into already-saturated soil.</p>
+          <h4>Pull EVERYTHING out before winter — don't let it decompose in your plot</h4>
+          <p>When each crop finishes, and especially when the season ends, pull every plant out by the roots. Stems, leaves, roots, fallen fruit — all of it. Take it to the central compost pile, never leave it in your plot. <strong>Don't chop-and-drop. Don't leave "just the leaves" to mulch in place.</strong> Anything that decomposes in your plot recycles its nutrients straight back into already-saturated soil. The fall cleanup is the most important one — clear the plot completely before the cold sets in.</p>
         </li>
         <li class="action-item">
-          <h4>Optional: a small copper sulfate amendment</h4>
-          <p>Copper is the one nutrient slightly low relative to zinc. A modest amendment to ~4–5 ppm is the only fertilizer this garden needs. Talk to the coordinator first.</p>
-        </li>
-        <li class="action-item">
-          <h4>Plant a cereal cover crop after harvest</h4>
-          <p>Winter rye, oats, or wheat sown in fall scavenge nutrients, prevent erosion, and add structure (not more nutrients) when terminated next spring.</p>
+          <h4>Plant a cereal cover crop after the fall cleanup</h4>
+          <p>Once the plot is cleared, sow winter rye, oats, or wheat. They scavenge leftover nutrients through fall and winter, prevent erosion, and build soil structure with their roots. Cut them down and remove the biomass next spring before they go to seed — same rule, the cuttings go to the central compost pile, not back into your plot.</p>
         </li>
       </ol>
 
@@ -1610,7 +1606,7 @@
       key: 'Mg', name: 'Magnesium (Mg)', unit: 'ppm', short: 'The central atom in chlorophyll.',
       avg: 363, min: 320, max: 423, optMin: 120, optMax: 180, scaleMin: 0, scaleMax: 500,
       status: 'high', statusLabel: '2× too high',
-      explain: 'About double the optimal range. The garden has more than enough. Don\'t apply Epsom salts (magnesium sulfate); the magnesium is fine and you\'d just add more sulfur (which is also adequate).'
+      explain: 'About double the optimal range. The garden has more than enough magnesium for any vegetable to grow well — nothing more is needed. (You may have heard that Epsom salts help tomatoes; in this soil they\'d only make the surplus worse, and they go against the garden\'s no-amendment policy anyway.)'
     },
     {
       key: 'S', name: 'Sulfur (S)', unit: 'ppm', short: 'Helps make proteins; gives onions and brassicas their flavor.',
@@ -1628,7 +1624,7 @@
       key: 'Cu', name: 'Copper (Cu)', unit: 'ppm', short: 'Tiny amount for enzyme function.',
       avg: 2.1, min: 1.8, max: 2.6, optMin: 1.0, optMax: 5.8, scaleMin: 0, scaleMax: 7,
       status: 'low', statusLabel: 'low vs zinc',
-      explain: 'Within absolute range, but too low relative to zinc. The only nutrient in this report that\'s actually worth supplementing — a small copper sulfate amendment to bring levels to 4–5 ppm would balance out the high zinc. Talk to the garden coordinator before applying.'
+      explain: 'Copper sits inside its absolute optimal range, but it\'s too low <em>relative</em> to zinc — the ratio matters as much as the absolute level. Under this garden\'s no-amendment policy, the way to nudge the ratio is to plant heavy feeders that pull zinc out of the soil faster than copper. Brassicas and sweet corn are particularly effective at this.'
     },
     {
       key: 'CEC', name: 'Cation Exchange Capacity', unit: 'meq/100g', short: 'How much fertility the soil can hold.',
@@ -1679,7 +1675,7 @@
     { id: 'cabbage', name: 'Cabbage', verdict: 'thrives', icon: 'cabbage', seasons: ['spring','fall'],
       reason: 'Brassica. Big heads = big nutrient draw. A few cabbages can pull more nutrients out in one season than years of "soft" cropping. Plant March–April or July.' },
     { id: 'cauli', name: 'Cauliflower', verdict: 'thrives', icon: 'cauli', seasons: ['spring','fall'],
-      reason: 'Brassica, heavy feeder. Boron is one micronutrient to watch — a small kelp meal pinch (not a full compost amendment) keeps heads from hollowing out. Plant March–April or July.' },
+      reason: 'Brassica, heavy feeder. Heads can occasionally hollow if the soil is short on boron, but most of this garden\'s plots have plenty of micronutrients to go around. Plant March–April or July.' },
     { id: 'brussels', name: 'Brussels sprouts', verdict: 'thrives', icon: 'brussels', seasons: ['fall'],
       reason: 'The heaviest-feeding brassica of all — perfect for over-fertile soil. Long season: transplant late May or June, harvest October through December. Frost makes them noticeably sweeter.' },
 
@@ -1709,17 +1705,17 @@
     { id: 'turnip', name: 'Turnips', verdict: 'avoid', icon: 'turnip', seasons: ['spring','fall'],
       reason: 'Root brassica — same problem as carrots and parsnips. The bulbs fork and crack in soil with this much organic matter. The leafy tops are still tasty if you grow it for greens, but the bulbs won\'t form cleanly. Same applies to rutabagas.' },
     { id: 'potato', name: 'Potatoes', verdict: 'avoid', icon: 'potato', seasons: ['summer'],
-      reason: 'pH > 7 promotes "common scab" disease — brown corky lesions on tubers that reduce yield and quality. Wait until pH drops, or grow them in containers with separate acidic soil.' },
+      reason: 'pH > 7 promotes "common scab" disease — brown corky lesions on tubers that reduce yield and quality. Skip them in your plot until the pH drops.' },
     { id: 'sweetpot', name: 'Sweet potatoes', verdict: 'avoid', icon: 'sweetpot', seasons: ['summer'],
-      reason: 'Same root-crop issue as regular potatoes — tubers grow misshapen and crack in soil with this much organic matter. The vines themselves are fine; the problem is the tuber. Container option only.' },
+      reason: 'Same root-crop issue as regular potatoes — tubers grow misshapen and crack in soil with this much organic matter. The vines themselves are fine; the problem is the tuber. Skip them in your plot.' },
     { id: 'strawberry', name: 'Strawberries', verdict: 'avoid', icon: 'strawberry', seasons: ['spring','summer'],
-      reason: 'Strawberries prefer pH 5.5–6.8. At 7.1 they often develop iron chlorosis — yellow leaves with green veins — and stunt. Plus the high organic matter keeps the crowns too wet, leading to rot. Worth growing only in containers with separate acidic mix.' },
+      reason: 'Strawberries prefer pH 5.5–6.8. At 7.1 they often develop iron chlorosis — yellow leaves with green veins — and stunt. The high organic matter also keeps the crowns too wet and they rot. Skip them in your plot.' },
     { id: 'raspberry', name: 'Raspberries & blackberries', verdict: 'avoid', icon: 'raspberry', seasons: ['summer'],
-      reason: 'Both brambles prefer pH 5.5–6.5. At 7.1 they get iron chlorosis, reduced cane vigor, and disappointing yields. If you really want them, dedicate a corner with separate acidic, sulfur-amended soil — but it\'s a multi-year project that rarely fully succeeds in alkaline ground.' },
+      reason: 'Both brambles prefer pH 5.5–6.5. At 7.1 they get iron chlorosis, reduced cane vigor, and disappointing yields. Skip them — alkaline soil makes them a multi-year frustration with very little fruit.' },
     { id: 'blueberry', name: 'Blueberries', verdict: 'avoid', icon: 'blueberry', seasons: ['summer'],
-      reason: 'Need pH below 5.5 to absorb iron. They\'ll yellow and stunt at this garden\'s pH of 7.1. Container planting with peat-rich, acidic mix is the only way to grow them here.' },
+      reason: 'Need pH below 5.5 to absorb iron. They\'ll yellow and stunt at this garden\'s pH of 7.1. Not a good fit for any plot here.' },
     { id: 'medherb', name: 'Mediterranean herbs', verdict: 'avoid', icon: 'medherb', seasons: ['spring','summer','fall'],
-      reason: 'Rosemary, thyme, oregano, sage, lavender. They actually love your alkaline pH — but they evolved on lean, sandy, well-drained slopes and hate rich organic soil. In your plot they grow weak and rot at the crown, especially during wet PA springs. A pot of sandy potting mix is the right home for these.' }
+      reason: 'Rosemary, thyme, oregano, sage, lavender. They actually love your alkaline pH — but they evolved on lean, sandy, well-drained slopes and hate rich organic soil. In your plot they grow weak and rot at the crown, especially during wet PA springs. Skip them.' }
   ];
 
   const explainTexts = {
@@ -1745,7 +1741,7 @@
     },
     6: {
       heading: 'What if my plants look pale or yellow?',
-      body: 'Yellowing leaves on alkaline, P-rich soil are usually iron or zinc deficiency caused by the excess phosphorus, not from a lack of fertilizer. Adding more compost makes it worse. A foliar iron spray (chelated iron sprayed on leaves) is a better short-term fix. Long-term, the only fix is to bring P and pH down — which is exactly what this report\'s plan does.'
+      body: 'Yellowing leaves on alkaline, P-rich soil are usually iron or zinc deficiency caused by the excess phosphorus — not from a lack of fertilizer. Adding more compost makes it worse, not better. Under a no-spray, no-amendment policy there\'s no quick fix, but the long-term answer is exactly what this report\'s plan does: bring phosphorus and pH down by planting heavy feeders, removing biomass, and skipping all additions. Most plants grow through it once the soil rebalances.'
     }
   };
 

@@ -1,0 +1,1988 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Your Soil Is Saying — PSU Community Garden</title>
+<style>
+  :root {
+    --bg:           #fbfaf3;
+    --bg-soft:      #f5f3e9;
+    --paper:        #ffffff;
+    --text:         #1b2820;
+    --text-soft:    #3d4f44;
+    --text-muted:   #6c7a70;
+    --border:       #e6e1d0;
+    --border-soft:  #efeadc;
+
+    --leaf:         #2d6a4f;
+    --leaf-dark:    #1b4332;
+    --leaf-deep:    #0f2e21;
+    --leaf-mid:     #52b788;
+    --leaf-soft:    #b7e4c7;
+    --leaf-tint:    #d8f3dc;
+    --leaf-pale:    #e8f5ec;
+
+    --sun:          #ffb703;
+    --sun-dark:     #fb8500;
+    --sun-pale:     #ffe8a3;
+    --sun-tint:     #fff8e1;
+
+    --soil:         #6b4423;
+    --soil-light:   #a07b50;
+    --soil-pale:    #f5ebe0;
+
+    --warn:         #c1121f;
+    --warn-dark:    #8a0c16;
+    --warn-soft:    #fde2e2;
+    --warn-tint:    #fdf2f2;
+
+    --skin:         #f5d7b8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  ::selection { background: var(--leaf-soft); color: var(--leaf-deep); }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 28px;
+    width: 100%;
+  }
+
+  /* ============ HEADER ============ */
+  .header {
+    border-bottom: 1px solid var(--border-soft);
+    padding: 12px 0 0;
+    background: rgba(255,255,255,0.94);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .header .container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark {
+    width: 32px; height: 32px;
+    background: var(--leaf);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    flex-shrink: 0;
+  }
+  .brand-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-soft);
+    letter-spacing: -0.005em;
+  }
+  .header-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+  .header-meta a { color: var(--leaf); text-decoration: none; }
+  .header-meta a:hover { text-decoration: underline; }
+
+  /* Section tabs — labeled, jump-to nav */
+  .section-tabs {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin: 0 -28px;
+    padding: 0 22px 0;
+    border-top: 1px solid var(--border-soft);
+  }
+  .section-tabs::-webkit-scrollbar { display: none; }
+  .section-tab {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    padding: 12px 14px 11px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 200ms ease;
+    white-space: nowrap;
+    letter-spacing: -0.005em;
+    position: relative;
+    border-bottom: 2.5px solid transparent;
+    margin-bottom: -1px;
+  }
+  .section-tab:hover { color: var(--leaf); background: var(--leaf-pale); }
+  .section-tab.active {
+    color: var(--leaf-dark);
+    border-bottom-color: var(--leaf);
+    background: var(--leaf-pale);
+  }
+  .section-tab .tab-num {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--bg-soft);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 18px;
+    margin-right: 6px;
+    transition: all 200ms;
+  }
+  .section-tab.active .tab-num { background: var(--leaf); color: white; }
+  .section-tab.done .tab-num { background: var(--leaf-mid); color: white; }
+
+  /* ============ MAIN / SCENE ============ */
+  main { flex: 1; padding: 56px 0 32px; }
+
+  .step { display: none; }
+  .step.active {
+    display: block;
+    animation: stepIn 600ms cubic-bezier(.25,.1,.25,1);
+  }
+  @keyframes stepIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 600ms cubic-bezier(.25,.1,.25,1),
+                transform 600ms cubic-bezier(.25,.1,.25,1);
+    transition-delay: 200ms;
+  }
+  .step.active .reveal { opacity: 1; transform: translateY(0); }
+  .step.active .reveal.delay-1 { transition-delay: 320ms; }
+  .step.active .reveal.delay-2 { transition-delay: 440ms; }
+  .step.active .reveal.delay-3 { transition-delay: 560ms; }
+  .step.active .reveal.delay-4 { transition-delay: 680ms; }
+
+  /* ============ TYPOGRAPHY ============ */
+  .eyebrow {
+    display: inline-block;
+    color: var(--leaf);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: clamp(30px, 5vw, 40px);
+    font-weight: 800;
+    line-height: 1.12;
+    margin-bottom: 22px;
+    letter-spacing: -0.025em;
+    color: var(--text);
+  }
+  h1 em {
+    color: var(--sun-dark);
+    font-style: italic;
+    font-weight: 800;
+  }
+  h2 {
+    font-size: clamp(24px, 3.5vw, 32px);
+    font-weight: 800;
+    line-height: 1.18;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  h2 em { color: var(--sun-dark); font-style: italic; }
+  p {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text-soft);
+    margin-bottom: 16px;
+  }
+  p strong { color: var(--text); font-weight: 700; }
+  p.lead { font-size: 19px; color: var(--text); line-height: 1.6; }
+  .closing-line { color: var(--text); font-weight: 600; }
+
+  /* ============ SCENE 1: TITLE ART ============ */
+  .title-art {
+    width: 100%;
+    height: auto;
+    margin: 28px 0 20px;
+    filter: drop-shadow(0 6px 20px rgba(45,106,79,0.10));
+  }
+  .step[data-step="1"].active .leaf-1 { animation: sway 4s ease-in-out 800ms infinite; transform-origin: 130px 290px; transform-box: fill-box; }
+  .step[data-step="1"].active .leaf-2 { animation: sway 4s ease-in-out 1200ms infinite reverse; transform-origin: 280px 280px; transform-box: fill-box; }
+  .step[data-step="1"].active .sun-rays { animation: gentleSpin 30s linear infinite; transform-origin: 380px 90px; transform-box: fill-box; }
+  .step[data-step="1"].active .clip-tick-1 { animation: tickIn 500ms ease-out 1400ms both; transform-origin: center; transform-box: fill-box; }
+  .step[data-step="1"].active .clip-tick-2 { animation: tickIn 500ms ease-out 1700ms both; transform-origin: center; transform-box: fill-box; }
+  .step[data-step="1"].active .clip-tick-3 { animation: tickIn 500ms ease-out 2000ms both; transform-origin: center; transform-box: fill-box; }
+  @keyframes sway {
+    0%, 100% { transform: rotate(0deg); }
+    50%      { transform: rotate(4deg); }
+  }
+  @keyframes gentleSpin { to { transform: rotate(360deg); } }
+  @keyframes tickIn {
+    0%   { transform: scale(0); opacity: 0; }
+    60%  { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* ============ SCENE 2: PANTRY ============ */
+  .pantry-art {
+    width: 100%;
+    max-width: 460px;
+    margin: 24px auto 8px;
+    display: block;
+    filter: drop-shadow(0 6px 18px rgba(107,68,35,0.14));
+  }
+  .step[data-step="2"].active .grain-spill { animation: spillBob 3.5s ease-in-out 1200ms infinite; transform-origin: center; transform-box: fill-box; }
+  .step[data-step="2"].active .pantry-hand {
+    animation: reachIn 3.5s ease-in-out 1600ms infinite;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  .step[data-step="2"].active .no-sign {
+    animation: noSignPulse 3.5s ease-in-out 1800ms infinite;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  @keyframes spillBob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(2px); }
+  }
+  @keyframes reachIn {
+    0%   { transform: translate(0, 0); opacity: 0; }
+    20%  { transform: translate(-8px, -4px); opacity: 1; }
+    50%  { transform: translate(-22px, -8px); opacity: 1; }
+    80%  { transform: translate(-8px, -4px); opacity: 1; }
+    100% { transform: translate(0, 0); opacity: 0; }
+  }
+  @keyframes noSignPulse {
+    0%, 30%, 70%, 100% { opacity: 0; transform: scale(0.7); }
+    45%, 60%           { opacity: 1; transform: scale(1); }
+  }
+
+  /* ============ SCENE 3: NUTRIENT BOARD ============ */
+  .nutrient-board {
+    background: var(--paper);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin: 24px 0 0;
+    box-shadow: 0 1px 3px rgba(15,46,33,0.05);
+  }
+  .nutrient-row {
+    display: grid;
+    grid-template-columns: minmax(120px, 1.3fr) 2.3fr auto;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--border-soft);
+    cursor: pointer;
+    transition: background 0.18s;
+    position: relative;
+  }
+  .nutrient-row:last-child { border-bottom: none; }
+  .nutrient-row:hover { background: var(--bg-soft); }
+  .nutrient-row.expanded { background: var(--leaf-pale); }
+  .nutrient-row .nut-name {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .nutrient-row .nut-unit {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .nutrient-bar {
+    position: relative;
+    height: 30px;
+    background: var(--bg-soft);
+    border-radius: 6px;
+    overflow: visible;
+  }
+  .nb-axis {
+    position: absolute;
+    inset: 0;
+    background: var(--bg-soft);
+    border-radius: 6px;
+  }
+  .nb-optimal {
+    position: absolute;
+    top: 0; bottom: 0;
+    background: var(--leaf-mid);
+    border-radius: 4px;
+    opacity: 0.95;
+  }
+  .nb-optimal::after {
+    content: "optimal";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 9px;
+    color: white;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+  .nb-garden {
+    position: absolute;
+    top: 4px; bottom: 4px;
+    background: rgba(251,133,0,0.32);
+    border-radius: 3px;
+    border: 1.5px solid var(--sun-dark);
+  }
+  .nb-marker {
+    position: absolute;
+    top: -3px; bottom: -3px;
+    width: 3px;
+    background: var(--soil);
+    border-radius: 2px;
+  }
+  .nb-marker::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: -3px;
+    width: 9px; height: 9px;
+    background: var(--soil);
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+  .nut-status {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+  .status-ok { background: var(--leaf-tint); color: var(--leaf-dark); }
+  .status-high { background: var(--warn-soft); color: var(--warn-dark); }
+  .status-low { background: var(--sun-tint); color: var(--sun-dark); }
+
+  .nutrient-detail {
+    grid-column: 1 / -1;
+    background: var(--leaf-pale);
+    margin: 0 -22px -14px -22px;
+    padding: 16px 22px 18px;
+    display: none;
+    border-top: 1px dashed var(--leaf-soft);
+  }
+  .nutrient-row.expanded .nutrient-detail { display: block; animation: detailIn 350ms ease-out; }
+  @keyframes detailIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .nut-stats {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: var(--text-soft);
+  }
+  .nut-stats span { white-space: nowrap; }
+  .nut-stats strong {
+    color: var(--leaf-deep);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .nutrient-detail p {
+    font-size: 15px;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* ============ SCENE 4: PLOT MAP ============ */
+  .plot-wrap {
+    background: var(--paper);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-top: 22px;
+    box-shadow: 0 1px 3px rgba(15,46,33,0.05);
+  }
+  .plot-axis-hint {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .plot-grid {
+    display: grid;
+    grid-template-columns: 26px repeat(14, 1fr);
+    grid-template-rows: 22px repeat(7, 1fr);
+    gap: 3px;
+    font-size: 9px;
+  }
+  .plot-axis {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 10px;
+  }
+  .plot-cell {
+    aspect-ratio: 1;
+    background: #f0eee2;
+    color: #9c9580;
+    border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600;
+    user-select: none;
+    font-family: inherit;
+    border: 1.5px solid transparent;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .plot-cell:hover {
+    background: var(--leaf-pale);
+    color: var(--leaf);
+    transform: scale(1.08);
+    z-index: 2;
+  }
+  .plot-cell.selected {
+    background: var(--leaf-mid);
+    color: white;
+    border-color: var(--leaf-dark);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(82,183,136,0.4);
+  }
+  .plot-cell.tested {
+    background: var(--sun-pale);
+    color: var(--soil);
+    border-color: var(--sun);
+    font-weight: 700;
+  }
+  .plot-cell.tested:hover {
+    background: var(--sun);
+    color: var(--leaf-deep);
+    transform: scale(1.12);
+    box-shadow: 0 4px 12px rgba(255,183,3,0.45);
+  }
+  .plot-cell.tested.selected {
+    background: var(--leaf);
+    color: white;
+    border-color: var(--leaf-deep);
+    transform: scale(1.12);
+    box-shadow: 0 4px 14px rgba(45,106,79,0.4);
+  }
+  .plot-legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--border);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch {
+    width: 12px; height: 12px;
+    border-radius: 2.5px;
+    display: inline-block;
+  }
+  .sw-tested { background: var(--sun-pale); border: 1.5px solid var(--sun); }
+  .sw-untested { background: #f0eee2; }
+  .sw-selected { background: var(--leaf); }
+
+  .plot-detail {
+    margin-top: 20px;
+    background: var(--leaf-pale);
+    border: 1px solid var(--leaf-soft);
+    border-left: 3px solid var(--leaf);
+    border-radius: 12px;
+    padding: 22px 24px;
+    animation: panelExpand 400ms cubic-bezier(.25,.1,.25,1);
+  }
+  .plot-detail.is-estimate {
+    background: var(--bg-soft);
+    border-color: var(--border);
+    border-left-color: var(--soil-light);
+  }
+  .plot-detail h3 {
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--leaf-deep);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .plot-id-tag {
+    background: var(--sun);
+    color: var(--leaf-deep);
+    padding: 2px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    letter-spacing: 0.05em;
+  }
+  .estimate-badge {
+    background: var(--soil-light);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .estimate-note {
+    font-size: 13.5px;
+    color: var(--text-soft);
+    margin: 4px 0 16px;
+    padding: 10px 12px;
+    background: rgba(160,123,80,0.10);
+    border-radius: 8px;
+    border-left: 2.5px solid var(--soil-light);
+    line-height: 1.5;
+  }
+  .estimate-note strong { color: var(--soil); }
+  .pr-range {
+    font-size: 11px;
+    color: var(--text-muted);
+    grid-column: 1 / -1;
+    margin-top: -4px;
+    margin-bottom: 4px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .plot-detail.is-estimate .pr-value::before {
+    content: "≈ ";
+    color: var(--soil-light);
+    font-weight: 600;
+  }
+  .plot-rows {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 18px;
+  }
+  .plot-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(45,106,79,0.12);
+    font-size: 14px;
+  }
+  .pr-label { color: var(--text-soft); }
+  .pr-value {
+    font-weight: 700;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    color: var(--leaf-deep);
+  }
+  .pr-flag {
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+  .flag-ok { background: var(--leaf-tint); color: var(--leaf-dark); }
+  .flag-high { background: var(--warn-soft); color: var(--warn-dark); }
+  .flag-low { background: var(--sun-tint); color: var(--sun-dark); }
+
+  /* ============ SCENE 5: PLANT GUIDE ============ */
+  .plant-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin: 22px 0 0;
+  }
+  .plant-card {
+    background: var(--paper);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 10px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-family: inherit;
+  }
+  .plant-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15,46,33,0.08);
+    border-color: var(--leaf);
+  }
+  .plant-card.selected {
+    border-color: var(--leaf);
+    background: var(--leaf-pale);
+    box-shadow: 0 6px 16px rgba(45,106,79,0.18);
+    transform: translateY(-2px);
+  }
+  .plant-icon {
+    width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .plant-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .plant-pill {
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .pill-thrives { background: var(--leaf-tint); color: var(--leaf-dark); }
+  .pill-maybe { background: var(--sun-tint); color: var(--sun-dark); }
+  .pill-avoid { background: var(--warn-soft); color: var(--warn-dark); }
+
+  .plant-detail {
+    margin-top: 18px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--leaf);
+    border-radius: 12px;
+    padding: 20px 22px;
+    animation: panelExpand 400ms cubic-bezier(.25,.1,.25,1);
+  }
+  .plant-detail.verdict-thrives { border-left-color: var(--leaf-mid); background: var(--leaf-pale); }
+  .plant-detail.verdict-maybe { border-left-color: var(--sun-dark); background: var(--sun-tint); }
+  .plant-detail.verdict-avoid { border-left-color: var(--warn); background: var(--warn-tint); }
+  .plant-detail h3 {
+    font-size: 18px; font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--text);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .plant-detail p { font-size: 15.5px; color: var(--text); margin: 0; }
+
+  /* ============ SCENE 6: ACTION + SUMMARY ============ */
+  .action-list {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0 28px;
+    display: grid;
+    gap: 12px;
+    counter-reset: step;
+  }
+  .action-item {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px 18px 64px;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(15,46,33,0.04);
+    opacity: 0;
+    transform: translateX(-12px);
+    transition: opacity 600ms ease-out, transform 600ms ease-out;
+  }
+  .step[data-step="6"].active .action-item { opacity: 1; transform: translateX(0); }
+  .step[data-step="6"].active .action-item:nth-child(1) { transition-delay: 400ms; }
+  .step[data-step="6"].active .action-item:nth-child(2) { transition-delay: 550ms; }
+  .step[data-step="6"].active .action-item:nth-child(3) { transition-delay: 700ms; }
+  .step[data-step="6"].active .action-item:nth-child(4) { transition-delay: 850ms; }
+  .step[data-step="6"].active .action-item:nth-child(5) { transition-delay: 1000ms; }
+  .action-item::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: 16px;
+    top: 18px;
+    width: 32px; height: 32px;
+    background: var(--sun);
+    color: var(--leaf-deep);
+    font-weight: 800;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    box-shadow: 0 2px 6px rgba(255,183,3,0.35);
+  }
+  .action-item h4 {
+    font-size: 16.5px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .action-item p { font-size: 15px; margin: 0; color: var(--text-soft); line-height: 1.55; }
+
+  .summary-card {
+    background: linear-gradient(180deg, var(--leaf-tint) 0%, var(--paper) 100%);
+    border: 1px solid var(--leaf-soft);
+    border-radius: 18px;
+    padding: 26px 28px 22px;
+    margin: 28px 0 22px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 600ms ease-out 1200ms, transform 600ms ease-out 1200ms;
+  }
+  .step[data-step="6"].active .summary-card { opacity: 1; transform: translateY(0); }
+  .summary-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--leaf);
+    margin-bottom: 10px;
+  }
+  .summary-list {
+    list-style: none; padding: 0; margin: 0;
+  }
+  .summary-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 0;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--text);
+    border-bottom: 1px solid rgba(45,106,79,0.12);
+  }
+  .summary-item:last-child { border-bottom: none; }
+  .summary-icon {
+    flex-shrink: 0;
+    width: 24px; height: 24px;
+    background: var(--leaf);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+
+  .ios-notification {
+    background: rgba(245, 245, 247, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 12px 14px;
+    margin: 22px auto 0;
+    max-width: 380px;
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    box-shadow: 0 12px 36px rgba(15,23,42,0.12), 0 1px 2px rgba(15,23,42,0.06);
+    border: 0.5px solid rgba(0,0,0,0.05);
+    opacity: 0;
+    transform: translateY(-12px);
+    transition: opacity 600ms ease-out 1500ms, transform 600ms ease-out 1500ms;
+  }
+  .step[data-step="6"].active .ios-notification {
+    opacity: 1; transform: translateY(0);
+  }
+  .ios-notification-icon {
+    width: 38px; height: 38px;
+    background: linear-gradient(180deg, var(--leaf) 0%, var(--leaf-dark) 100%);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; flex-shrink: 0;
+  }
+  .ios-notification-body { flex: 1; min-width: 0; }
+  .ios-notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1px;
+  }
+  .ios-notification-app { font-size: 14px; font-weight: 600; color: black; }
+  .ios-notification-time { font-size: 13px; color: rgba(0,0,0,0.55); }
+  .ios-notification-text {
+    font-size: 14px;
+    color: rgba(0,0,0,0.85);
+    line-height: 1.35;
+  }
+  .ios-caption {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 12px;
+    font-style: italic;
+  }
+
+  /* ============ TELL ME MORE ============ */
+  .explain-area {
+    margin-top: 28px;
+    padding-top: 8px;
+  }
+  .explain-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 1.5px solid var(--border);
+    background: var(--paper);
+    color: var(--text-soft);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 220ms ease;
+    line-height: 1;
+  }
+  .explain-more-btn:hover {
+    background: var(--leaf-pale);
+    border-color: var(--leaf);
+    color: var(--leaf);
+  }
+  .explain-more-btn .chevron { transition: transform 350ms ease; }
+  .explain-more-btn[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+  .explain-panel { display: none; margin-top: 14px; }
+  .explain-panel.open {
+    display: block;
+    animation: panelExpand 400ms cubic-bezier(.25,.1,.25,1);
+  }
+  @keyframes panelExpand {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .explain-panel-inner {
+    background: var(--leaf-pale);
+    border: 1px solid var(--leaf-soft);
+    border-left: 3px solid var(--leaf);
+    border-radius: 10px;
+    padding: 18px 22px;
+  }
+  .explain-panel-heading {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--leaf);
+    margin-bottom: 8px;
+  }
+  .explain-panel-inner p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text);
+    margin: 0 0 12px;
+  }
+  .explain-panel-inner p:last-child { margin-bottom: 0; }
+
+  /* ============ NAV ============ */
+  .nav-bar {
+    border-top: 1px solid var(--border-soft);
+    padding: 16px 0;
+    background: var(--paper);
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    box-shadow: 0 -2px 16px rgba(15,46,33,0.04);
+  }
+  .nav-bar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  .btn-ghost {
+    padding: 14px 22px;
+    background: transparent;
+    border: 2px solid var(--border);
+    color: var(--text-soft);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 220ms ease;
+    min-height: 50px;
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background: var(--bg-soft);
+    border-color: var(--text-muted);
+    color: var(--text);
+  }
+  .btn-ghost:disabled { opacity: 0.35; cursor: not-allowed; }
+  .step-counter {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-align: center;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .step-counter strong { color: var(--leaf-dark); font-weight: 700; }
+  .btn-next {
+    padding: 15px 32px;
+    background: var(--leaf);
+    color: white;
+    border: none;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 700;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 220ms ease;
+    box-shadow: 0 2px 6px rgba(15,46,33,0.12);
+    min-height: 52px;
+    letter-spacing: 0.005em;
+  }
+  .btn-next:hover {
+    background: var(--leaf-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(45,106,79,0.3);
+  }
+  .btn-next:active { transform: translateY(0); }
+
+  .footer-text {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 18px 28px 24px;
+    line-height: 1.6;
+  }
+  .footer-text a { color: var(--leaf); }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 760px) {
+    body { font-size: 17px; }
+    h1 { font-size: 28px; line-height: 1.16; }
+    h2 { font-size: 22px; }
+    p, p.lead { font-size: 16.5px; }
+    main { padding: 28px 0 16px; }
+    .container { padding: 0 18px; }
+    .header { padding: 10px 0 0; }
+    .header-meta { display: none; }
+    .section-tabs {
+      margin: 0 -18px;
+      padding: 0 14px 0;
+    }
+    .section-tab {
+      padding: 11px 12px 10px;
+      font-size: 13px;
+    }
+    .section-tab .tab-num {
+      width: 16px; height: 16px; line-height: 16px;
+      font-size: 10px;
+      margin-right: 5px;
+    }
+    .nutrient-row {
+      grid-template-columns: 1fr auto;
+      gap: 8px 12px;
+      padding: 14px 18px;
+    }
+    .nutrient-row .nut-name { font-size: 15px; }
+    .nutrient-row .nut-unit { font-size: 11.5px; }
+    .nutrient-row .nutrient-bar { grid-column: 1 / -1; }
+    .nut-status { font-size: 10px; padding: 3px 8px; }
+    .plot-wrap { padding: 18px 14px; }
+    .plot-grid { grid-template-columns: 22px repeat(14, 1fr); gap: 2px; font-size: 8px; }
+    .plot-axis { font-size: 9px; }
+    .plot-rows { grid-template-columns: 1fr; gap: 4px; }
+    .plot-detail { padding: 18px 18px; }
+    .plant-grid { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+    .plant-card { padding: 10px 6px 10px; }
+    .plant-name { font-size: 12px; }
+    .plant-pill { font-size: 9px; padding: 2px 6px; }
+    .plant-icon { width: 38px; height: 38px; }
+    .nav-bar { padding: 12px 0; }
+    .nav-bar .container { padding: 0 12px; gap: 8px; }
+    .btn-next {
+      padding: 14px 22px;
+      font-size: 16px;
+      min-height: 48px;
+      flex-shrink: 0;
+    }
+    .btn-ghost {
+      padding: 12px 16px;
+      font-size: 14.5px;
+      min-height: 48px;
+      flex-shrink: 0;
+    }
+    .step-counter { font-size: 11.5px; }
+    .ios-notification { max-width: 100%; }
+    .action-item { padding: 16px 16px 16px 56px; }
+    .action-item::before { left: 14px; top: 16px; width: 28px; height: 28px; font-size: 13px; }
+    .summary-card { padding: 22px 22px 18px; }
+    .summary-item { font-size: 16px; }
+  }
+
+  @media (max-width: 420px) {
+    h1 { font-size: 25px; }
+    h2 { font-size: 20px; }
+    .container { padding: 0 14px; }
+    .brand-text { display: none; }
+    .section-tab { padding: 10px 9px 9px; font-size: 12.5px; }
+    .btn-next { padding: 13px 18px; font-size: 15px; }
+    .btn-ghost { padding: 11px 14px; font-size: 14px; }
+    .step-counter { font-size: 11px; max-width: 80px; }
+    .plot-grid { grid-template-columns: 18px repeat(14, 1fr); font-size: 7.5px; }
+    .plant-grid { grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); }
+    .plant-name { font-size: 11.5px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .reveal, .summary-item, .ios-notification, .action-item { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <div class="header-top">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18">
+            <path d="M12 21 C 5 18, 5 12, 8 8 C 10 6, 12 6, 12 6 C 12 6, 14 6, 16 8 C 19 12, 19 18, 12 21 Z"
+                  fill="currentColor" opacity="0.95"/>
+            <path d="M12 21 L 12 9" stroke="white" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+            <path d="M12 14 L 9 11 M12 12 L 15 9" stroke="white" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="brand-text">PSU Community Garden · Soil Report</span>
+      </div>
+      <span class="header-meta"><a href="mailto:kzk5945@psu.edu">questions?</a></span>
+    </div>
+    <nav class="section-tabs" aria-label="Sections">
+      <button class="section-tab active" data-jump="1"><span class="tab-num">1</span>Overview</button>
+      <button class="section-tab" data-jump="2"><span class="tab-num">2</span>Why it happened</button>
+      <button class="section-tab" data-jump="3"><span class="tab-num">3</span>The numbers</button>
+      <button class="section-tab" data-jump="4"><span class="tab-num">4</span>Your plot</button>
+      <button class="section-tab" data-jump="5"><span class="tab-num">5</span>What to plant</button>
+      <button class="section-tab" data-jump="6"><span class="tab-num">6</span>Your plan</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <!-- ===================== STEP 1: HOOK ===================== -->
+    <section class="step active" data-step="1">
+      <div class="eyebrow reveal">What 13 soil samples revealed</div>
+      <h1 class="reveal delay-1">Your garden is <em>richer</em> than it needs to be.</h1>
+      <p class="lead reveal delay-2">
+        We sent samples from 13 plots to Penn State's Agricultural Analytical Lab. The results came back clear and consistent.
+        <strong>Phosphorus is at four times the recommended level. Calcium and magnesium are at twice. Organic matter is at twice.</strong>
+        The most useful thing you can do for your soil this season is leave it alone.
+      </p>
+
+      <svg viewBox="0 0 500 340" class="title-art reveal delay-2" aria-label="Garden plot with crops growing, sun above, and a clipboard showing test results">
+        <!-- Sky/sun -->
+        <circle class="sun-rays" cx="380" cy="90" r="36" fill="#ffe8a3" opacity="0.5"/>
+        <circle cx="380" cy="90" r="26" fill="#ffb703"/>
+        <circle cx="380" cy="90" r="20" fill="#fb8500" opacity="0.6"/>
+
+        <!-- Ground -->
+        <ellipse cx="250" cy="295" rx="220" ry="22" fill="#e8dcc4" opacity="0.7"/>
+
+        <!-- Soil mound / plot -->
+        <path d="M 70 295 Q 90 245 250 240 Q 410 245 430 295 Z" fill="#8b6f47"/>
+        <path d="M 70 295 Q 90 250 250 245 Q 410 250 430 295" stroke="#6b4423" stroke-width="2" fill="none"/>
+
+        <!-- Soil texture dots -->
+        <circle cx="120" cy="278" r="2" fill="#6b4423" opacity="0.5"/>
+        <circle cx="170" cy="285" r="1.5" fill="#6b4423" opacity="0.5"/>
+        <circle cx="220" cy="275" r="2" fill="#6b4423" opacity="0.5"/>
+        <circle cx="290" cy="282" r="1.5" fill="#6b4423" opacity="0.5"/>
+        <circle cx="340" cy="278" r="2" fill="#6b4423" opacity="0.5"/>
+        <circle cx="380" cy="285" r="1.5" fill="#6b4423" opacity="0.5"/>
+
+        <!-- Tomato plant left -->
+        <g>
+          <path d="M 130 290 Q 128 250 130 215" stroke="#2d6a4f" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <g class="leaf-1">
+            <path d="M 130 240 Q 105 230 100 245 Q 110 252 130 248" fill="#52b788"/>
+            <path d="M 130 240 Q 110 240 105 245" stroke="#2d6a4f" stroke-width="0.8" fill="none"/>
+          </g>
+          <path d="M 130 220 Q 150 215 155 230 Q 145 240 130 232" fill="#52b788"/>
+          <circle cx="135" cy="225" r="8" fill="#dc2626"/>
+          <circle cx="124" cy="232" r="7" fill="#dc2626"/>
+          <path d="M 135 219 L 134 215 L 138 217 Z" fill="#2d6a4f"/>
+          <path d="M 124 226 L 123 222 L 127 223 Z" fill="#2d6a4f"/>
+        </g>
+
+        <!-- Leafy green middle -->
+        <g>
+          <path d="M 250 290 L 250 265" stroke="#1b4332" stroke-width="2.5"/>
+          <path d="M 250 265 Q 230 255 225 275 Q 240 280 250 272" fill="#52b788"/>
+          <path d="M 250 265 Q 270 255 275 275 Q 260 280 250 272" fill="#95d5b2"/>
+          <path d="M 250 268 Q 235 248 245 250 Q 250 258 250 272" fill="#74c69d"/>
+          <path d="M 250 268 Q 265 248 255 250 Q 250 258 250 272" fill="#52b788"/>
+          <path d="M 250 270 Q 250 245 252 250 Q 252 260 250 272" fill="#74c69d"/>
+        </g>
+
+        <!-- Sunflower right -->
+        <g>
+          <path d="M 350 290 Q 348 240 350 195" stroke="#2d6a4f" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <g class="leaf-2">
+            <path d="M 350 240 Q 380 230 388 248 Q 372 254 350 248" fill="#52b788"/>
+          </g>
+          <path d="M 350 215 Q 325 210 320 225 Q 335 232 350 224" fill="#52b788"/>
+          <!-- Sunflower head -->
+          <g transform="translate(350 185)">
+            <g>
+              <ellipse cx="0" cy="-18" rx="5" ry="14" fill="#ffb703"/>
+              <ellipse cx="13" cy="-13" rx="5" ry="14" fill="#fb8500" transform="rotate(45)"/>
+              <ellipse cx="18" cy="0" rx="5" ry="14" fill="#ffb703" transform="rotate(90)"/>
+              <ellipse cx="13" cy="13" rx="5" ry="14" fill="#fb8500" transform="rotate(135)"/>
+              <ellipse cx="0" cy="18" rx="5" ry="14" fill="#ffb703" transform="rotate(180)"/>
+              <ellipse cx="-13" cy="13" rx="5" ry="14" fill="#fb8500" transform="rotate(225)"/>
+              <ellipse cx="-18" cy="0" rx="5" ry="14" fill="#ffb703" transform="rotate(270)"/>
+              <ellipse cx="-13" cy="-13" rx="5" ry="14" fill="#fb8500" transform="rotate(315)"/>
+            </g>
+            <circle r="11" fill="#6b4423"/>
+            <circle r="11" fill="none" stroke="#3b2412" stroke-width="1.2"/>
+          </g>
+        </g>
+
+        <!-- Floating clipboard / lab report -->
+        <g transform="translate(70 60)">
+          <rect x="0" y="0" width="120" height="150" rx="8" fill="white" stroke="#1b4332" stroke-width="2"/>
+          <rect x="35" y="-6" width="50" height="14" rx="3" fill="#6b4423" stroke="#3b2412" stroke-width="1.2"/>
+          <rect x="48" y="-3" width="24" height="8" rx="1.5" fill="#a07b50"/>
+
+          <text x="60" y="22" text-anchor="middle" font-size="9" font-weight="700" fill="#2d6a4f" font-family="-apple-system, sans-serif" letter-spacing="0.06em">SOIL REPORT</text>
+          <line x1="12" y1="30" x2="108" y2="30" stroke="#e6e1d0" stroke-width="1"/>
+
+          <g class="clip-tick-1">
+            <circle cx="20" cy="48" r="6" fill="#52b788"/>
+            <path d="M 17 48 L 20 51 L 24 45" stroke="white" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <text x="34" y="52" font-size="9" fill="#1b4332" font-family="-apple-system, sans-serif" font-weight="600">pH 7.1 · ok</text>
+
+          <g class="clip-tick-2">
+            <circle cx="20" cy="72" r="6" fill="#fb8500"/>
+            <path d="M 20 68 L 20 73 M 20 76 L 20 76" stroke="white" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          </g>
+          <text x="34" y="76" font-size="9" fill="#1b4332" font-family="-apple-system, sans-serif" font-weight="600">P 293 · 4× too high</text>
+
+          <g class="clip-tick-3">
+            <circle cx="20" cy="96" r="6" fill="#fb8500"/>
+            <path d="M 20 92 L 20 97 M 20 100 L 20 100" stroke="white" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          </g>
+          <text x="34" y="100" font-size="9" fill="#1b4332" font-family="-apple-system, sans-serif" font-weight="600">Ca 5127 · 2× too high</text>
+
+          <line x1="12" y1="115" x2="108" y2="115" stroke="#e6e1d0" stroke-width="1" stroke-dasharray="2 2"/>
+          <text x="60" y="130" text-anchor="middle" font-size="8.5" fill="#6c7a70" font-family="-apple-system, sans-serif" font-style="italic">13 plots · 14 metrics</text>
+          <text x="60" y="142" text-anchor="middle" font-size="8.5" fill="#6c7a70" font-family="-apple-system, sans-serif" font-style="italic">Penn State Ag Lab</text>
+        </g>
+      </svg>
+
+      <p class="lead closing-line reveal delay-3">Here's what the numbers say — and what they mean for what you plant.</p>
+    </section>
+
+    <!-- ===================== STEP 2: PANTRY METAPHOR ===================== -->
+    <section class="step" data-step="2">
+      <div class="eyebrow reveal">Why this is happening</div>
+      <h2 class="reveal delay-1">Soil is a pantry, not a refrigerator.</h2>
+      <p class="reveal delay-2">A refrigerator empties every week — milk, lettuce, leftovers gone. A pantry, full of dry goods, doesn't. Compost and fertilizer behave like the pantry: they don't get used up the same season they're added. Year after year of well-meaning amendments build up.</p>
+
+      <svg viewBox="0 0 460 340" class="pantry-art reveal delay-2" aria-label="A pantry with overflowing jars of nutrients and a hand reaching to add more">
+        <!-- Pantry frame -->
+        <rect x="50" y="20" width="360" height="290" rx="10" fill="#a07b50" stroke="#6b4423" stroke-width="2.5"/>
+        <rect x="62" y="32" width="336" height="266" rx="6" fill="#f5ebe0"/>
+
+        <!-- Wood grain hints -->
+        <line x1="50" y1="80" x2="62" y2="80" stroke="#6b4423" stroke-width="0.8"/>
+        <line x1="398" y1="80" x2="410" y2="80" stroke="#6b4423" stroke-width="0.8"/>
+        <line x1="50" y1="180" x2="62" y2="180" stroke="#6b4423" stroke-width="0.8"/>
+        <line x1="398" y1="180" x2="410" y2="180" stroke="#6b4423" stroke-width="0.8"/>
+
+        <!-- Shelves -->
+        <rect x="62" y="118" width="336" height="6" fill="#6b4423"/>
+        <rect x="62" y="208" width="336" height="6" fill="#6b4423"/>
+
+        <!-- TOP SHELF: Phosphorus jar (overflowing) -->
+        <g transform="translate(95 68)">
+          <rect x="-22" y="-8" width="44" height="10" fill="#6b4423" rx="1.5"/>
+          <path d="M -20 0 Q -22 38 -18 50 L 18 50 Q 22 38 20 0 Z" fill="#fff8e1" stroke="#1b4332" stroke-width="1.6"/>
+          <text x="0" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="#1b4332" font-family="-apple-system, sans-serif" letter-spacing="0.04em">P</text>
+          <text x="0" y="44" text-anchor="middle" font-size="6.5" fill="#6c7a70" font-family="-apple-system, sans-serif">4× too much</text>
+          <!-- Spilling beans/grain -->
+          <g class="grain-spill">
+            <ellipse cx="-12" cy="-12" rx="3" ry="2" fill="#fb8500"/>
+            <ellipse cx="-4" cy="-15" rx="3" ry="2" fill="#ffb703"/>
+            <ellipse cx="6" cy="-13" rx="3" ry="2" fill="#fb8500"/>
+            <ellipse cx="14" cy="-10" rx="3" ry="2" fill="#ffb703"/>
+            <ellipse cx="22" cy="-6" rx="3" ry="2" fill="#fb8500"/>
+            <ellipse cx="-22" cy="-9" rx="3" ry="2" fill="#ffb703"/>
+          </g>
+        </g>
+
+        <!-- TOP SHELF: Potassium jar (overflowing) -->
+        <g transform="translate(180 68)">
+          <rect x="-22" y="-8" width="44" height="10" fill="#6b4423" rx="1.5"/>
+          <path d="M -20 0 Q -22 38 -18 50 L 18 50 Q 22 38 20 0 Z" fill="#e8f5ec" stroke="#1b4332" stroke-width="1.6"/>
+          <text x="0" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="#1b4332" font-family="-apple-system, sans-serif" letter-spacing="0.04em">K</text>
+          <text x="0" y="44" text-anchor="middle" font-size="6.5" fill="#6c7a70" font-family="-apple-system, sans-serif">very high</text>
+          <ellipse cx="-12" cy="-10" rx="3" ry="2" fill="#52b788"/>
+          <ellipse cx="-2" cy="-12" rx="3" ry="2" fill="#74c69d"/>
+          <ellipse cx="10" cy="-9" rx="3" ry="2" fill="#52b788"/>
+        </g>
+
+        <!-- TOP SHELF: Ca jar (overflowing) -->
+        <g transform="translate(265 68)">
+          <rect x="-22" y="-8" width="44" height="10" fill="#6b4423" rx="1.5"/>
+          <path d="M -20 0 Q -22 38 -18 50 L 18 50 Q 22 38 20 0 Z" fill="#fdfaf0" stroke="#1b4332" stroke-width="1.6"/>
+          <text x="0" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="#1b4332" font-family="-apple-system, sans-serif" letter-spacing="0.04em">Ca</text>
+          <text x="0" y="44" text-anchor="middle" font-size="6.5" fill="#6c7a70" font-family="-apple-system, sans-serif">2× too much</text>
+          <circle cx="-14" cy="-10" r="2.5" fill="#fdfaf0" stroke="#a07b50" stroke-width="0.7"/>
+          <circle cx="-4" cy="-13" r="2.5" fill="#fdfaf0" stroke="#a07b50" stroke-width="0.7"/>
+          <circle cx="6" cy="-11" r="2.5" fill="#fdfaf0" stroke="#a07b50" stroke-width="0.7"/>
+          <circle cx="16" cy="-9" r="2.5" fill="#fdfaf0" stroke="#a07b50" stroke-width="0.7"/>
+        </g>
+
+        <!-- TOP SHELF: Mg jar (knocked over, spilling) -->
+        <g transform="translate(345 78) rotate(-22)">
+          <rect x="-22" y="-8" width="44" height="10" fill="#6b4423" rx="1.5"/>
+          <path d="M -20 0 Q -22 36 -18 48 L 18 48 Q 22 36 20 0 Z" fill="#d8f3dc" stroke="#1b4332" stroke-width="1.6"/>
+          <text x="0" y="30" text-anchor="middle" font-size="11" font-weight="700" fill="#1b4332" font-family="-apple-system, sans-serif" letter-spacing="0.04em">Mg</text>
+          <text x="0" y="42" text-anchor="middle" font-size="6.5" fill="#6c7a70" font-family="-apple-system, sans-serif">2× too much</text>
+        </g>
+        <!-- Mg spill onto shelf -->
+        <ellipse cx="385" cy="115" rx="14" ry="2.5" fill="#74c69d" opacity="0.7"/>
+        <circle cx="378" cy="113" r="2" fill="#52b788"/>
+        <circle cx="392" cy="112" r="2" fill="#52b788"/>
+        <circle cx="385" cy="115" r="1.5" fill="#74c69d"/>
+
+        <!-- MIDDLE SHELF: Organic Matter jar (huge, overflowing dramatically) -->
+        <g transform="translate(135 158)">
+          <rect x="-32" y="-8" width="64" height="10" fill="#6b4423" rx="1.5"/>
+          <path d="M -30 0 Q -32 38 -28 50 L 28 50 Q 32 38 30 0 Z" fill="#f5ebe0" stroke="#1b4332" stroke-width="1.6"/>
+          <text x="0" y="30" text-anchor="middle" font-size="11" font-weight="700" fill="#1b4332" font-family="-apple-system, sans-serif" letter-spacing="0.04em">OM</text>
+          <text x="0" y="42" text-anchor="middle" font-size="6.5" fill="#6c7a70" font-family="-apple-system, sans-serif">2× too much</text>
+        </g>
+        <!-- Big spill of organic crumbs -->
+        <g class="grain-spill">
+          <ellipse cx="100" cy="148" rx="3.5" ry="2.5" fill="#6b4423"/>
+          <ellipse cx="115" cy="145" rx="3.5" ry="2.5" fill="#8b6f47"/>
+          <ellipse cx="130" cy="143" rx="3.5" ry="2.5" fill="#6b4423"/>
+          <ellipse cx="145" cy="146" rx="3.5" ry="2.5" fill="#8b6f47"/>
+          <ellipse cx="160" cy="144" rx="3.5" ry="2.5" fill="#6b4423"/>
+          <ellipse cx="175" cy="148" rx="3.5" ry="2.5" fill="#8b6f47"/>
+          <ellipse cx="120" cy="155" rx="3" ry="2" fill="#a07b50"/>
+          <ellipse cx="150" cy="155" rx="3" ry="2" fill="#a07b50"/>
+        </g>
+
+        <!-- MIDDLE SHELF: Zn jar (a bit overflowing) -->
+        <g transform="translate(255 158)">
+          <rect x="-22" y="-8" width="44" height="10" fill="#6b4423" rx="1.5"/>
+          <path d="M -20 0 Q -22 38 -18 50 L 18 50 Q 22 38 20 0 Z" fill="#cdd5e0" stroke="#1b4332" stroke-width="1.6"/>
+          <text x="0" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="#1b4332" font-family="-apple-system, sans-serif" letter-spacing="0.04em">Zn</text>
+          <text x="0" y="44" text-anchor="middle" font-size="6.5" fill="#6c7a70" font-family="-apple-system, sans-serif">high</text>
+          <circle cx="-12" cy="-10" r="2" fill="#9ca3af"/>
+          <circle cx="-2" cy="-12" r="2" fill="#9ca3af"/>
+        </g>
+
+        <!-- MIDDLE SHELF: Cu jar (small, slightly low) -->
+        <g transform="translate(335 168)">
+          <rect x="-18" y="-8" width="36" height="10" fill="#6b4423" rx="1.5"/>
+          <path d="M -16 0 Q -18 28 -14 38 L 14 38 Q 18 28 16 0 Z" fill="#fef3e0" stroke="#1b4332" stroke-width="1.6"/>
+          <!-- Mostly empty -->
+          <path d="M -14 28 Q -14 32 -10 36 L 10 36 Q 14 32 14 28 Z" fill="#fb8500" opacity="0.4"/>
+          <text x="0" y="20" text-anchor="middle" font-size="9" font-weight="700" fill="#1b4332" font-family="-apple-system, sans-serif">Cu</text>
+          <text x="0" y="32" text-anchor="middle" font-size="6" fill="#6c7a70" font-family="-apple-system, sans-serif">low</text>
+        </g>
+
+        <!-- BOTTOM SHELF: Big bag of compost being added (with NO sign) -->
+        <g class="pantry-hand">
+          <!-- Bag of compost -->
+          <path d="M 145 245 Q 140 235 145 230 L 215 230 Q 220 235 215 245 L 220 285 L 140 285 Z"
+                fill="#8b6f47" stroke="#3b2412" stroke-width="1.6"/>
+          <rect x="160" y="250" width="40" height="14" fill="#fdfaf0" rx="1"/>
+          <text x="180" y="260" text-anchor="middle" font-size="7.5" font-weight="700" fill="#1b4332" font-family="-apple-system, sans-serif">COMPOST</text>
+          <line x1="155" y1="270" x2="205" y2="270" stroke="#3b2412" stroke-width="0.8"/>
+          <line x1="155" y1="276" x2="195" y2="276" stroke="#3b2412" stroke-width="0.8"/>
+
+          <!-- Hand holding bag from above -->
+          <ellipse cx="180" cy="226" rx="22" ry="6" fill="#f5d7b8" stroke="#3b2412" stroke-width="1.4"/>
+          <rect x="170" y="208" width="20" height="14" fill="#3b5bdb" rx="2"/>
+        </g>
+
+        <!-- NO sign over compost -->
+        <g class="no-sign" transform="translate(180 260)">
+          <circle r="42" fill="none" stroke="#c1121f" stroke-width="6"/>
+          <line x1="-30" y1="30" x2="30" y2="-30" stroke="#c1121f" stroke-width="6" stroke-linecap="round"/>
+        </g>
+
+        <!-- Floor shadow -->
+        <ellipse cx="230" cy="320" rx="170" ry="6" fill="#3b2412" opacity="0.08"/>
+      </svg>
+
+      <p class="reveal delay-3">By the time the soil is saying "I'm overflowing," the buildup is the work of many gardeners over many years. None of it is anyone's fault — it's how community gardens almost always end up.</p>
+      <p class="closing-line reveal delay-4">Adding more compost now is like piling flour into a pantry that already won't close.</p>
+    </section>
+
+    <!-- ===================== STEP 3: NUTRIENT BOARD ===================== -->
+    <section class="step" data-step="3">
+      <div class="eyebrow reveal">The numbers, on a scoreboard</div>
+      <h2 class="reveal delay-1">Every nutrient, against the recommended range.</h2>
+      <p class="reveal delay-2">
+        The <strong style="color:var(--leaf)">green</strong> band on each row is the optimal range for vegetables.
+        The <strong style="color:var(--sun-dark)">orange</strong> band is what your garden has — minimum to maximum.
+        The dot marks the average. Click any nutrient to read what it does and why this level matters.
+      </p>
+      <div class="nutrient-board reveal delay-3" id="nutrientBoard"></div>
+    </section>
+
+    <!-- ===================== STEP 4: PLOT LOOKUP ===================== -->
+    <section class="step" data-step="4">
+      <div class="eyebrow reveal">Your plot specifically</div>
+      <h2 class="reveal delay-1">13 plots tested. <em>Find yours.</em></h2>
+      <p class="reveal delay-2">The yellow plots below were sampled and analyzed individually — click one for its full lab report. <strong>If your plot wasn't sampled</strong>, click it anyway and we'll show you an <em>estimate</em> based on the garden-wide average, so you have a rough idea of what to expect.</p>
+
+      <div class="plot-wrap reveal delay-3">
+        <div class="plot-axis-hint">
+          <span>← west</span>
+          <span>plot map (north at top)</span>
+          <span>east →</span>
+        </div>
+        <div class="plot-grid" id="plotGrid" role="grid" aria-label="Garden plot map"></div>
+        <div class="plot-legend">
+          <span class="legend-item"><span class="swatch sw-tested"></span> Tested</span>
+          <span class="legend-item"><span class="swatch sw-untested"></span> Not tested</span>
+          <span class="legend-item"><span class="swatch sw-selected"></span> Selected</span>
+        </div>
+      </div>
+      <div id="plotDetail"></div>
+    </section>
+
+    <!-- ===================== STEP 5: PLANT GUIDE ===================== -->
+    <section class="step" data-step="5">
+      <div class="eyebrow reveal">What to plant</div>
+      <h2 class="reveal delay-1">Pick crops that <em>eat</em> the excess.</h2>
+      <p class="reveal delay-2">The fastest way to bring soil back into balance is to plant heavy feeders. They pull nitrogen, phosphorus, calcium, and magnesium out of the soil as they grow. Click any crop below to see how it'll do this season.</p>
+      <div class="plant-grid reveal delay-3" id="plantGrid"></div>
+      <div id="plantDetail"></div>
+    </section>
+
+    <!-- ===================== STEP 6: ACTION + SUMMARY ===================== -->
+    <section class="step" data-step="6">
+      <div class="eyebrow reveal">Your plan this season</div>
+      <h2 class="reveal delay-1">Five things, in order.</h2>
+      <p class="reveal delay-2">If you only do these, the garden will be healthier next year than it was this year.</p>
+
+      <ol class="action-list">
+        <li class="action-item">
+          <h4>Skip the compost and fertilizer</h4>
+          <p>Your plot already has more nutrients than crops can use. Adding more locks up iron and zinc, and runoff pollutes nearby waterways.</p>
+        </li>
+        <li class="action-item">
+          <h4>Plant heavy feeders</h4>
+          <p>Brassicas (broccoli, kale, cabbage), leafy greens, tomatoes, asparagus. They thrive in rich soil and pull excess nutrients out.</p>
+        </li>
+        <li class="action-item">
+          <h4>Pull plants at season end — don't chop and drop</h4>
+          <p>Remove plant material from your plot and add it to the central compost pile. Don't recycle nutrients straight back into already-saturated soil.</p>
+        </li>
+        <li class="action-item">
+          <h4>Optional: a small copper sulfate amendment</h4>
+          <p>Copper is the one nutrient slightly low relative to zinc. A modest amendment to ~4–5 ppm is the only fertilizer this garden needs. Talk to the coordinator first.</p>
+        </li>
+        <li class="action-item">
+          <h4>Plant a cereal cover crop after harvest</h4>
+          <p>Winter rye, oats, or wheat sown in fall scavenge nutrients, prevent erosion, and add structure (not more nutrients) when terminated next spring.</p>
+        </li>
+      </ol>
+
+      <div class="summary-card">
+        <div class="summary-eyebrow">What to remember</div>
+        <ul class="summary-list">
+          <li class="summary-item">
+            <span class="summary-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="13" height="13"><path d="M5 12.5l4 4L19 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span>Skip the compost and fertilizer this year — there's already plenty in the soil.</span>
+          </li>
+          <li class="summary-item">
+            <span class="summary-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="13" height="13"><path d="M5 12.5l4 4L19 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span>Plant heavy feeders. Avoid root crops and acid-loving plants.</span>
+          </li>
+          <li class="summary-item">
+            <span class="summary-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="13" height="13"><path d="M5 12.5l4 4L19 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span>Cover crop with cereal grains in fall to keep nutrients on-site over winter.</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="ios-notification">
+        <div class="ios-notification-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20">
+            <path d="M12 21 C 5 18, 5 12, 8 8 C 10 6, 12 6, 12 6 C 12 6, 14 6, 16 8 C 19 12, 19 18, 12 21 Z" fill="currentColor" opacity="0.9"/>
+            <path d="M12 21 L 12 9 M12 14 L 9 11 M12 12 L 15 9" stroke="white" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="ios-notification-body">
+          <div class="ios-notification-header">
+            <span class="ios-notification-app">Garden Coordinator</span>
+            <span class="ios-notification-time">now</span>
+          </div>
+          <div class="ios-notification-text">Soil's already plenty rich. Plant well, skip the amendments, and we'll see if things get better.</div>
+        </div>
+      </div>
+      <p class="ios-caption">A small note from the coordinator. That's all this report really says.</p>
+    </section>
+
+    <!-- ===================== TELL ME MORE (shared) ===================== -->
+    <div class="explain-area">
+      <button class="explain-more-btn" id="explain-btn" aria-expanded="false" aria-controls="explain-panel">
+        <span class="btn-text">Tell me more</span>
+        <svg class="chevron" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="explain-panel" id="explain-panel" role="region" aria-label="More detail">
+        <div class="explain-panel-inner">
+          <div class="explain-panel-heading" id="explain-heading">A bit more</div>
+          <div id="explain-body"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div class="nav-bar">
+  <div class="container">
+    <button class="btn-ghost" id="back-btn" disabled>← Back</button>
+    <span class="step-counter" id="step-counter">Step 1 of 6</span>
+    <button class="btn-next" id="next-btn">Continue →</button>
+  </div>
+</div>
+
+<div class="footer-text">
+  Soil testing &amp; analysis: <strong>Kelly Kosiarski</strong>, Garden Event Planner ·
+  <a href="mailto:kzk5945@psu.edu">kzk5945@psu.edu</a><br/>
+  Lab: <a href="https://agsci.psu.edu/aasl" target="_blank" rel="noopener">Penn State Agricultural Analytical Services Lab</a> ·
+  <a href="https://agsci.psu.edu/aasl/soil-testing/methods" target="_blank" rel="noopener">methods</a>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============ DATA ============ */
+
+  const plots = {
+    '10G': { pH: 7.02, P: 343, K: 290, Mg: 349, Ca: 4911, S: 15.8, Zn: 22.8, Cu: 2.0, CEC: 18.7, OM: 9.89 },
+    '16G': { pH: 7.34, P: 305, K: 240, Mg: 385, Ca: 5151, S: 18.2, Zn: 18.5, Cu: 2.0, CEC: 18.8, OM: 10.23 },
+    '15D': { pH: 7.11, P: 252, K: 315, Mg: 360, Ca: 4649, S: 19.6, Zn: 17.4, Cu: 2.0, CEC: 18.8, OM: 9.58 },
+    '8G':  { pH: 7.27, P: 270, K: 177, Mg: 320, Ca: 4533, S: 14.4, Zn: 24.8, Cu: 1.8, CEC: 18.1, OM: 10.06 },
+    '14G': { pH: 7.17, P: 335, K: 253, Mg: 342, Ca: 4966, S: 15.9, Zn: 24.5, Cu: 2.1, CEC: 18.5, OM: 9.78 },
+    '18E': { pH: 7.22, P: 216, K: 198, Mg: 414, Ca: 5807, S: 17.8, Zn: 20.1, Cu: 1.9, CEC: 19.0, OM: 12.6 },
+    '8B':  { pH: 7.23, P: 304, K: 240, Mg: 326, Ca: 5184, S: 17.0, Zn: 20.7, Cu: 1.8, CEC: 18.3, OM: 10.46 },
+    '10A': { pH: 7.05, P: 262, K: 227, Mg: 357, Ca: 5078, S: 15.6, Zn: 20.7, Cu: 2.5, CEC: 18.6, OM: 10.6 },
+    '18A': { pH: 7.23, P: 289, K: 506, Mg: 363, Ca: 5189, S: 25.0, Zn: 22.0, Cu: 2.6, CEC: 19.3, OM: 11.45 },
+    '13B': { pH: 7.15, P: 272, K: 375, Mg: 331, Ca: 4233, S: 29.3, Zn: 18.4, Cu: 2.2, CEC: 18.7, OM: 7.42 },
+    '6G':  { pH: 6.94, P: 345, K: 232, Mg: 392, Ca: 5938, S: 19.1, Zn: 28.1, Cu: 1.8, CEC: 18.9, OM: 13.52 },
+    '14A': { pH: 7.21, P: 279, K: 499, Mg: 358, Ca: 4681, S: 26.1, Zn: 18.1, Cu: 1.9, CEC: 19.3, OM: 9.1 },
+    '9D':  { pH: 6.9,  P: 338, K: 361, Mg: 423, Ca: 6330, S: 25.5, Zn: 28.7, Cu: 2.1, CEC: 19.5, OM: 12.64 }
+  };
+  const testedIds = Object.keys(plots);
+
+  const nutrients = [
+    {
+      key: 'pH', name: 'pH', unit: '', short: 'How acidic or alkaline the soil is.',
+      avg: 7.1, min: 6.9, max: 7.3, optMin: 6.2, optMax: 7.3, scaleMin: 4, scaleMax: 9,
+      status: 'ok', statusLabel: 'within range',
+      explain: 'Most vegetables thrive at pH 6.2–7.3. At 7+ micronutrients like iron, zinc, and copper become harder to absorb (a common cause of yellow leaves). Potatoes also develop "common scab" disease at pH > 7. Acid-loving plants — blueberries, azaleas, rhododendrons — need pH below 5.5 and won\'t do well here.'
+    },
+    {
+      key: 'P', name: 'Phosphorus (P)', unit: 'ppm', short: 'Builds roots, flowers, fruit.',
+      avg: 293, min: 216, max: 345, optMin: 35, optMax: 70, scaleMin: 0, scaleMax: 380,
+      status: 'high', statusLabel: '4× too high',
+      explain: 'Even the lowest plot is 3× too high. Excess P binds iron and zinc and makes them unavailable to roots — so plants in P-rich soil often look iron-deficient. Excess P also runs off into streams and contributes to algal blooms. P sticks around in soil for years; the only fix is to stop adding more (compost, manure, all-purpose fertilizers) and let plants slowly draw it down.'
+    },
+    {
+      key: 'K', name: 'Potassium (K)', unit: 'ppm', short: 'Helps water regulation and disease resistance.',
+      avg: 301, min: 177, max: 506, optMin: 175, optMax: 215, scaleMin: 0, scaleMax: 550,
+      status: 'high', statusLabel: 'high',
+      explain: 'The minimum already starts at the optimal max. Some plots are well over double. In moderate excess K isn\'t directly harmful, but it competes with magnesium and calcium uptake — so very high K can cause Mg or Ca deficiency symptoms even when those nutrients are abundant. Don\'t apply potash, wood ash, or "tomato fertilizers" (which are K-heavy).'
+    },
+    {
+      key: 'Ca', name: 'Calcium (Ca)', unit: 'ppm', short: 'Strengthens cell walls and soil structure.',
+      avg: 5127, min: 4233, max: 6330, optMin: 2000, optMax: 2500, scaleMin: 0, scaleMax: 7000,
+      status: 'high', statusLabel: '2× too high',
+      explain: 'More than double the optimal max across every plot. Likely from past lime applications and high-calcium compost. Excess calcium isn\'t toxic, but it pushes pH up, competes with magnesium and potassium uptake, and reinforces the alkaline conditions that block iron and zinc.'
+    },
+    {
+      key: 'Mg', name: 'Magnesium (Mg)', unit: 'ppm', short: 'The central atom in chlorophyll.',
+      avg: 363, min: 320, max: 423, optMin: 120, optMax: 180, scaleMin: 0, scaleMax: 500,
+      status: 'high', statusLabel: '2× too high',
+      explain: 'About double the optimal range. The garden has more than enough. Don\'t apply Epsom salts (magnesium sulfate); the magnesium is fine and you\'d just add more sulfur (which is also adequate).'
+    },
+    {
+      key: 'S', name: 'Sulfur (S)', unit: 'ppm', short: 'Helps make proteins; gives onions and brassicas their flavor.',
+      avg: 19.9, min: 14.4, max: 29.3, optMin: 15, optMax: 30, scaleMin: 0, scaleMax: 40,
+      status: 'ok', statusLabel: 'within range',
+      explain: 'Right in the middle of the optimal range — the one secondary nutrient that\'s not too high. No need to add or remove.'
+    },
+    {
+      key: 'Zn', name: 'Zinc (Zn)', unit: 'ppm', short: 'Tiny amount needed for enzymes.',
+      avg: 21.9, min: 17.4, max: 28.7, optMin: 8, optMax: 10, scaleMin: 0, scaleMax: 32,
+      status: 'high', statusLabel: 'high',
+      explain: 'Roughly twice the upper end of optimal — likely carried in from compost. Not directly toxic in moderate excess, but with zinc this much higher than copper, plants may struggle to take up enough copper. Zinc should be roughly 2× copper; here it\'s closer to 10×.'
+    },
+    {
+      key: 'Cu', name: 'Copper (Cu)', unit: 'ppm', short: 'Tiny amount for enzyme function.',
+      avg: 2.1, min: 1.8, max: 2.6, optMin: 1.0, optMax: 5.8, scaleMin: 0, scaleMax: 7,
+      status: 'low', statusLabel: 'low vs zinc',
+      explain: 'Within absolute range, but too low relative to zinc. The only nutrient in this report that\'s actually worth supplementing — a small copper sulfate amendment to bring levels to 4–5 ppm would balance out the high zinc. Talk to the garden coordinator before applying.'
+    },
+    {
+      key: 'CEC', name: 'Cation Exchange Capacity', unit: 'meq/100g', short: 'How much fertility the soil can hold.',
+      avg: 18.8, min: 18.1, max: 19.5, optMin: 10, optMax: 20, scaleMin: 0, scaleMax: 25,
+      status: 'ok', statusLabel: 'healthy',
+      explain: 'CEC measures how many positively charged nutrient ions (Ca, Mg, K) the soil can hold and exchange with plant roots. Higher means the soil can store more fertility. The garden\'s 18.8 is high — typical of clay-rich, organic-matter-rich soil. Good news (holds nutrients well), bad news (any added fertilizer lingers a long time).'
+    },
+    {
+      key: 'OM', name: 'Organic Matter', unit: '%', short: 'Decomposed plant and animal material.',
+      avg: 10.6, min: 7.4, max: 13.5, optMin: 3, optMax: 5, scaleMin: 0, scaleMax: 16,
+      status: 'high', statusLabel: '2× too high',
+      explain: 'Average is 2× the optimal max. Even the lowest plot is above the high end. At 10%+, soil stays too loose and wet for root crops (carrots, parsnips, radishes will fork or rot), and continuously releases more N, P, and K into already-saturated soil. The fix is patient: stop adding compost, remove biomass at season end, let active growth slowly draw it down.'
+    }
+  ];
+
+  const plants = [
+    { id: 'tomato', name: 'Tomatoes', verdict: 'thrives', icon: 'tomato',
+      reason: 'Deep-rooted heavy feeders that love the high organic matter for moisture retention through summer heat. They pull N and K out steadily through fruit production. One of the best picks for this soil.' },
+    { id: 'lettuce', name: 'Lettuce', verdict: 'thrives', icon: 'lettuce',
+      reason: 'Fast-growing leafy crop that eats nitrogen aggressively. Will look beautifully lush in this soil. Can do 2–3 plantings per season.' },
+    { id: 'kale', name: 'Kale', verdict: 'thrives', icon: 'kale',
+      reason: 'Brassica family — heavy feeder. Tolerates the slightly alkaline pH well. Particularly good at pulling calcium and magnesium out of soil.' },
+    { id: 'broccoli', name: 'Broccoli', verdict: 'thrives', icon: 'broccoli',
+      reason: 'Brassica, exceptionally heavy feeder. Pulls N, P, Ca, Mg out of soil fast — exactly what this garden needs. Will produce big tight heads in this fertility level.' },
+    { id: 'cabbage', name: 'Cabbage', verdict: 'thrives', icon: 'cabbage',
+      reason: 'Brassica. Big heads = big nutrient draw. Will produce huge solid heads in this soil. A few cabbages can pull more nutrients out in one season than years of "soft" cropping.' },
+    { id: 'cauli', name: 'Cauliflower', verdict: 'thrives', icon: 'cauli',
+      reason: 'Brassica, heavy feeder. Boron is one micronutrient to watch — a small kelp meal pinch (not a full compost amendment) keeps heads from hollowing out.' },
+    { id: 'asparagus', name: 'Asparagus', verdict: 'thrives', icon: 'asparagus',
+      reason: 'Perennial — plant once, harvest 15+ years. Tolerates rich soil and prefers slightly alkaline pH (6.5–7.5). Great long-term crop for this garden.' },
+    { id: 'cucumber', name: 'Cucumbers', verdict: 'thrives', icon: 'cucumber',
+      reason: 'Heavy feeder, vigorous grower, loves the moisture retention from high organic matter. Trellis them and they\'ll produce all summer.' },
+    { id: 'squash', name: 'Summer squash', verdict: 'thrives', icon: 'squash',
+      reason: 'Aggressive grower, heavy feeder. Rapidly puts nutrients into biomass that you can remove at season end — one of the best "draw-down" crops you can plant.' },
+    { id: 'pepper', name: 'Peppers', verdict: 'thrives', icon: 'pepper',
+      reason: 'Like tomatoes — heavy feeders that love the rich soil and good moisture retention. Watch for blossom-end rot (calcium uptake issue from over-watering, not a calcium shortage).' },
+    { id: 'beet', name: 'Beets', verdict: 'maybe', icon: 'beet',
+      reason: 'Tolerate rich soil better than carrots, but very high organic matter still causes some misshape. Try a small patch — they may do fine, especially if you avoid over-watering.' },
+    { id: 'onion', name: 'Onions', verdict: 'maybe', icon: 'onion',
+      reason: 'Need sulfur for flavor (which you have). But the high N from organic matter can keep them green-leafy at the cost of bulb formation. Use longer-day varieties and stop watering once tops fall over.' },
+    { id: 'carrot', name: 'Carrots', verdict: 'avoid', icon: 'carrot',
+      reason: 'Root crop — will fork in soil with this much organic matter (yours is 2× too high). You\'ll get cosmetically odd, multi-pronged carrots. Try them again after a few years of biomass removal.' },
+    { id: 'parsnip', name: 'Parsnips', verdict: 'avoid', icon: 'parsnip',
+      reason: 'Same problem as carrots — high organic matter causes forking and rot. The roots can\'t form a clean taproot in loose, over-rich soil.' },
+    { id: 'radish', name: 'Radishes', verdict: 'avoid', icon: 'radish',
+      reason: 'Crack and split in over-rich soil. They\'ll be cosmetically rough and may bolt to flower before forming nice round bulbs.' },
+    { id: 'potato', name: 'Potatoes', verdict: 'avoid', icon: 'potato',
+      reason: 'pH > 7 promotes "common scab" disease — brown corky lesions on tubers that reduce yield and quality. Wait until pH drops, or grow them in containers with separate acidic soil.' },
+    { id: 'blueberry', name: 'Blueberries', verdict: 'avoid', icon: 'blueberry',
+      reason: 'Need pH below 5.5 to absorb iron. They\'ll yellow and stunt at this garden\'s pH of 7.1. Container planting with peat-rich, acidic mix is the only way to grow them here.' }
+  ];
+
+  const explainTexts = {
+    1: {
+      heading: 'Why test now?',
+      body: 'Many community gardens have never been tested at all. Annual soil testing is one of the most reliable ways to spot nutrient problems before they hurt yields — and to avoid wasting money on amendments that aren\'t needed. The 13 plots tested here are a representative sample. The results almost certainly apply to the rest of the garden too.'
+    },
+    2: {
+      heading: 'Where did all the nutrients come from?',
+      body: 'Mostly compost. Compost is wonderful for new gardens with thin soil, but in established plots it\'s accumulative — gardeners add compost annually, the previous season\'s plant matter gets composted back in, and over a decade or two you end up here. A few plots also show signs of past lime applications (very high calcium) and high-K fertilizers (high potassium).'
+    },
+    3: {
+      heading: 'What about nitrogen?',
+      body: 'Mehlich-3 doesn\'t measure plant-available nitrogen — N moves through soil too quickly for a single test to catch reliably. But organic matter at 10% (more than 2× normal) is constantly mineralizing nitrogen as microbes break it down. Even though we can\'t see N on this scoreboard, you can assume there\'s plenty in the soil too.'
+    },
+    4: {
+      heading: 'How were the plots picked?',
+      body: 'A representative sample across the garden — different rows (A, B, D, E, G), different columns (6 through 18). Roughly the right side of the garden plus a few from row A and B for variation. Differences between plots are small, which means the findings apply broadly. Your specific plot probably looks a lot like the average.'
+    },
+    5: {
+      heading: 'Why do brassicas help so much?',
+      body: 'Broccoli, kale, cabbage, and cauliflower are exceptionally heavy feeders — they pull a lot of nitrogen, phosphorus, calcium, and magnesium per square foot. Tomatoes and leafy greens are also heavy feeders. Root crops aren\'t (and they have other reasons to avoid this soil — high organic matter makes carrots and parsnips fork into ugly multi-pronged shapes).'
+    },
+    6: {
+      heading: 'What if my plants look pale or yellow?',
+      body: 'Yellowing leaves on alkaline, P-rich soil are usually iron or zinc deficiency caused by the excess phosphorus, not from a lack of fertilizer. Adding more compost makes it worse. A foliar iron spray (chelated iron sprayed on leaves) is a better short-term fix. Long-term, the only fix is to bring P and pH down — which is exactly what this report\'s plan does.'
+    }
+  };
+
+  const TOTAL_STEPS = 6;
+  let currentStep = 1;
+
+  const sectionNames = {
+    1: 'Overview',
+    2: 'Why it happened',
+    3: 'The numbers',
+    4: 'Your plot',
+    5: 'What to plant',
+    6: 'Your plan'
+  };
+
+  /* ============ STEP NAVIGATION ============ */
+
+  function showStep(n) {
+    if (n < 1 || n > TOTAL_STEPS) return;
+    currentStep = n;
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    const step = document.querySelector('[data-step="' + n + '"]');
+    if (step) {
+      void step.offsetWidth;
+      step.classList.add('active');
+    }
+    updateTabs(n);
+    updateNav(n);
+    updateExplain(n);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    history.replaceState(null, '', '#step-' + n);
+  }
+
+  function updateTabs(n) {
+    const tabs = document.querySelectorAll('.section-tab');
+    tabs.forEach((tab, i) => {
+      const idx = i + 1;
+      tab.classList.remove('active', 'done');
+      if (idx === n) tab.classList.add('active');
+      else if (idx < n) tab.classList.add('done');
+    });
+    const activeTab = tabs[n - 1];
+    if (activeTab && activeTab.scrollIntoView) {
+      activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }
+
+  function updateNav(n) {
+    const back = document.getElementById('back-btn');
+    const next = document.getElementById('next-btn');
+    const counter = document.getElementById('step-counter');
+    counter.innerHTML = '<strong>' + sectionNames[n] + '</strong> &middot; ' + n + ' of ' + TOTAL_STEPS;
+    back.disabled = (n === 1);
+    next.textContent = (n === TOTAL_STEPS) ? '↺  Start over' : 'Continue →';
+  }
+
+  function updateExplain(n) {
+    const heading = document.getElementById('explain-heading');
+    const body = document.getElementById('explain-body');
+    const btn = document.getElementById('explain-btn');
+    const panel = document.getElementById('explain-panel');
+    const data = explainTexts[n] || { heading: '', body: '' };
+    heading.textContent = data.heading;
+    body.innerHTML = '<p>' + data.body + '</p>';
+    btn.setAttribute('aria-expanded', 'false');
+    btn.querySelector('.btn-text').textContent = 'Tell me more';
+    panel.classList.remove('open');
+  }
+
+  function toggleExplain() {
+    const btn = document.getElementById('explain-btn');
+    const panel = document.getElementById('explain-panel');
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!isOpen));
+    panel.classList.toggle('open', !isOpen);
+    btn.querySelector('.btn-text').textContent = isOpen ? 'Tell me more' : 'Show less';
+  }
+
+  /* ============ NUTRIENT BOARD ============ */
+
+  function buildNutrientBoard() {
+    const board = document.getElementById('nutrientBoard');
+    board.innerHTML = nutrients.map((n, i) => {
+      const range = n.scaleMax - n.scaleMin;
+      const pct = v => ((v - n.scaleMin) / range) * 100;
+      const optLeft = pct(n.optMin);
+      const optWidth = Math.max(pct(n.optMax) - optLeft, 4);
+      const gardenLeft = pct(n.min);
+      const gardenWidth = Math.max(pct(n.max) - gardenLeft, 1);
+      const avgLeft = pct(n.avg);
+      return `
+        <div class="nutrient-row" data-key="${n.key}" role="button" tabindex="0">
+          <div class="nut-name">
+            ${n.name}
+            <span class="nut-unit">${n.short}</span>
+          </div>
+          <div class="nutrient-bar">
+            <div class="nb-axis">
+              <div class="nb-optimal" style="left:${optLeft}%; width:${optWidth}%"></div>
+              <div class="nb-garden" style="left:${gardenLeft}%; width:${gardenWidth}%"></div>
+              <div class="nb-marker" style="left:${avgLeft}%"></div>
+            </div>
+          </div>
+          <div class="nut-status status-${n.status}">${n.statusLabel}</div>
+          <div class="nutrient-detail">
+            <div class="nut-stats">
+              <span>Garden avg: <strong>${n.avg}${n.unit}</strong></span>
+              <span>Min: <strong>${n.min}${n.unit}</strong></span>
+              <span>Max: <strong>${n.max}${n.unit}</strong></span>
+              <span>Optimal: <strong>${n.optMin}–${n.optMax}${n.unit}</strong></span>
+            </div>
+            <p>${n.explain}</p>
+          </div>
+        </div>
+      `;
+    }).join('');
+    board.querySelectorAll('.nutrient-row').forEach(row => {
+      const toggle = () => row.classList.toggle('expanded');
+      row.addEventListener('click', toggle);
+      row.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    });
+  }
+
+  /* ============ PLOT MAP ============ */
+
+  // Garden-wide averages with ±1 std-dev typical-range, used for estimating un-sampled plots
+  const estimate = {
+    pH:  { avg: 7.14, lo: 7.0,  hi: 7.3,  optMin: 6.2,  optMax: 7.3,  fmt: v => v.toFixed(2) },
+    P:   { avg: 293,  lo: 250,  hi: 340,  optMin: 35,   optMax: 70,   fmt: v => Math.round(v) },
+    K:   { avg: 301,  lo: 190,  hi: 410,  optMin: 175,  optMax: 215,  fmt: v => Math.round(v) },
+    Mg:  { avg: 363,  lo: 330,  hi: 395,  optMin: 120,  optMax: 180,  fmt: v => Math.round(v) },
+    Ca:  { avg: 5127, lo: 4530, hi: 5720, optMin: 2000, optMax: 2500, fmt: v => Math.round(v) },
+    S:   { avg: 19.9, lo: 15,   hi: 25,   optMin: 15,   optMax: 30,   fmt: v => v.toFixed(1) },
+    Zn:  { avg: 21.9, lo: 18,   hi: 26,   optMin: 8,    optMax: 10,   fmt: v => v.toFixed(1) },
+    Cu:  { avg: 2.05, lo: 1.8,  hi: 2.3,  optMin: 1.0,  optMax: 5.8,  fmt: v => v.toFixed(2) },
+    CEC: { avg: 18.8, lo: 18.4, hi: 19.2, optMin: 10,   optMax: 20,   fmt: v => v.toFixed(1) },
+    OM:  { avg: 10.6, lo: 9.0,  hi: 12.2, optMin: 3,    optMax: 5,    fmt: v => v.toFixed(1) }
+  };
+
+  function buildPlotMap() {
+    const grid = document.getElementById('plotGrid');
+    const cols = [18,17,16,15,14,13,12,11,10,9,8,7,6,5];
+    const rows = ['G','F','E','D','C','B','A'];
+    const html = [];
+    html.push('<div></div>');
+    cols.forEach(c => html.push(`<div class="plot-axis">${c}</div>`));
+    rows.forEach(r => {
+      html.push(`<div class="plot-axis">${r}</div>`);
+      cols.forEach(c => {
+        const id = `${c}${r}`;
+        const tested = testedIds.includes(id);
+        html.push(
+          `<button class="plot-cell${tested ? ' tested' : ''}" data-id="${id}" aria-label="${tested ? 'Plot ' + id + ' (tested)' : 'Plot ' + id + ' (not tested — show estimate)'}">${id}</button>`
+        );
+      });
+    });
+    grid.innerHTML = html.join('');
+    grid.querySelectorAll('.plot-cell').forEach(cell => {
+      cell.addEventListener('click', () => selectPlot(cell.dataset.id));
+    });
+  }
+
+  function flagFor(value, optMin, optMax) {
+    if (value < optMin) return { cls: 'flag-low', label: 'low' };
+    if (value > optMax) return { cls: 'flag-high', label: 'high' };
+    return { cls: 'flag-ok', label: 'ok' };
+  }
+
+  function selectPlot(id) {
+    document.querySelectorAll('.plot-cell').forEach(c => c.classList.remove('selected'));
+    const cell = document.querySelector(`.plot-cell[data-id="${id}"]`);
+    if (cell) cell.classList.add('selected');
+
+    const detail = document.getElementById('plotDetail');
+    const isEstimate = !plots[id];
+
+    const metrics = [
+      { key: 'pH',  label: 'pH'              },
+      { key: 'P',   label: 'Phosphorus',     unit: ' ppm' },
+      { key: 'K',   label: 'Potassium',      unit: ' ppm' },
+      { key: 'Mg',  label: 'Magnesium',      unit: ' ppm' },
+      { key: 'Ca',  label: 'Calcium',        unit: ' ppm' },
+      { key: 'S',   label: 'Sulfur',         unit: ' ppm' },
+      { key: 'Zn',  label: 'Zinc',           unit: ' ppm' },
+      { key: 'Cu',  label: 'Copper',         unit: ' ppm' },
+      { key: 'CEC', label: 'CEC'             },
+      { key: 'OM',  label: 'Organic matter', unit: '%' }
+    ];
+
+    let rowsHtml = '';
+    if (isEstimate) {
+      rowsHtml = metrics.map(m => {
+        const e = estimate[m.key];
+        const v = e.avg;
+        const f = flagFor(v, e.optMin, e.optMax);
+        const unit = m.unit || '';
+        return `<div class="plot-row">
+          <span class="pr-label">${m.label}</span>
+          <span class="pr-value">${e.fmt(v)}${unit}</span>
+          <span class="pr-flag ${f.cls}">${f.label}</span>
+          <span class="pr-range">typical: ${e.fmt(e.lo)}${unit}–${e.fmt(e.hi)}${unit}</span>
+        </div>`;
+      }).join('');
+    } else {
+      const data = plots[id];
+      rowsHtml = metrics.map(m => {
+        const e = estimate[m.key];
+        const raw = data[m.key];
+        const f = flagFor(raw, e.optMin, e.optMax);
+        const unit = m.unit || '';
+        const display = m.key === 'pH' ? raw.toFixed(2)
+                      : m.key === 'OM' ? raw.toFixed(1)
+                      : (raw % 1 === 0 ? raw : raw.toFixed(1));
+        return `<div class="plot-row">
+          <span class="pr-label">${m.label}</span>
+          <span class="pr-value">${display}${unit}</span>
+          <span class="pr-flag ${f.cls}">${f.label}</span>
+        </div>`;
+      }).join('');
+    }
+
+    detail.innerHTML = `
+      <div class="plot-detail${isEstimate ? ' is-estimate' : ''}">
+        <h3>
+          Plot <span class="plot-id-tag">${id}</span>
+          ${isEstimate ? '<span class="estimate-badge">estimate</span>' : ''}
+        </h3>
+        ${isEstimate ? `<div class="estimate-note">
+          <strong>Plot ${id} wasn't sampled directly.</strong> These values are estimated from the average of the 13 tested plots. The garden's plots have shared management for years, so the verdict (high P, high Ca/Mg, high organic matter) almost certainly applies to your plot too — but the exact numbers could vary, especially K, S, and organic matter. For point-precise values, the only answer is a real soil test.
+        </div>` : ''}
+        <div class="plot-rows">
+          ${rowsHtml}
+        </div>
+      </div>
+    `;
+  }
+
+  /* ============ PLANT GRID ============ */
+
+  const plantIcons = {
+    tomato:    '<svg viewBox="0 0 48 48"><circle cx="24" cy="28" r="14" fill="#dc2626"/><circle cx="20" cy="24" r="3" fill="#fca5a5" opacity="0.7"/><path d="M 24 14 L 20 8 L 24 12 L 28 8 L 24 14" fill="#2d6a4f"/><path d="M 24 14 L 17 12 M 24 14 L 31 12" stroke="#2d6a4f" stroke-width="2" stroke-linecap="round"/></svg>',
+    lettuce:   '<svg viewBox="0 0 48 48"><ellipse cx="24" cy="32" rx="18" ry="10" fill="#74c69d"/><path d="M 12 28 Q 14 18 22 16 Q 30 14 38 22 Q 36 32 24 34 Q 14 32 12 28 Z" fill="#95d5b2"/><path d="M 18 26 Q 22 18 26 18 Q 28 22 26 28" stroke="#52b788" stroke-width="1.5" fill="none"/><path d="M 28 24 Q 32 20 34 22" stroke="#52b788" stroke-width="1.5" fill="none"/></svg>',
+    kale:      '<svg viewBox="0 0 48 48"><path d="M 24 38 L 24 22" stroke="#1b4332" stroke-width="2"/><path d="M 14 18 Q 12 14 16 12 Q 18 14 18 18 Q 16 18 14 18 Z" fill="#1b4332"/><path d="M 22 14 Q 20 8 24 6 Q 28 8 26 14 Q 24 16 22 14 Z" fill="#2d6a4f"/><path d="M 30 16 Q 32 10 36 12 Q 36 16 32 18 Q 30 18 30 16 Z" fill="#1b4332"/><path d="M 16 24 Q 12 22 12 26 Q 14 28 18 26 Q 18 24 16 24 Z" fill="#2d6a4f"/><path d="M 32 24 Q 38 22 36 28 Q 32 28 30 26 Q 30 24 32 24 Z" fill="#1b4332"/></svg>',
+    broccoli:  '<svg viewBox="0 0 48 48"><circle cx="20" cy="18" r="6" fill="#2d6a4f"/><circle cx="28" cy="16" r="6" fill="#1b4332"/><circle cx="24" cy="22" r="6" fill="#2d6a4f"/><circle cx="32" cy="22" r="5" fill="#1b4332"/><circle cx="18" cy="24" r="5" fill="#1b4332"/><path d="M 22 26 L 22 38 M 26 26 L 26 38" stroke="#95d5b2" stroke-width="3" stroke-linecap="round"/></svg>',
+    cabbage:   '<svg viewBox="0 0 48 48"><circle cx="24" cy="26" r="16" fill="#74c69d"/><circle cx="24" cy="26" r="11" fill="#52b788"/><circle cx="24" cy="26" r="6" fill="#2d6a4f"/><path d="M 10 22 Q 16 14 24 10" stroke="#1b4332" stroke-width="1.2" fill="none"/><path d="M 38 22 Q 32 14 24 10" stroke="#1b4332" stroke-width="1.2" fill="none"/><path d="M 12 32 Q 24 38 36 32" stroke="#1b4332" stroke-width="1.2" fill="none"/></svg>',
+    cauli:     '<svg viewBox="0 0 48 48"><circle cx="20" cy="20" r="5" fill="white" stroke="#a07b50" stroke-width="0.6"/><circle cx="28" cy="18" r="5" fill="white" stroke="#a07b50" stroke-width="0.6"/><circle cx="24" cy="24" r="5" fill="white" stroke="#a07b50" stroke-width="0.6"/><circle cx="30" cy="24" r="4" fill="white" stroke="#a07b50" stroke-width="0.6"/><circle cx="18" cy="24" r="4" fill="white" stroke="#a07b50" stroke-width="0.6"/><path d="M 14 28 Q 10 32 14 36 Q 24 38 34 36 Q 38 32 34 28" fill="#52b788"/></svg>',
+    asparagus: '<svg viewBox="0 0 48 48"><path d="M 18 40 Q 18 22 16 8" stroke="#52b788" stroke-width="3" stroke-linecap="round"/><path d="M 24 40 Q 24 18 22 6" stroke="#2d6a4f" stroke-width="3.5" stroke-linecap="round"/><path d="M 30 40 Q 30 22 28 8" stroke="#52b788" stroke-width="3" stroke-linecap="round"/><path d="M 22 6 L 20 4 L 22 4 Z M 22 4 L 24 4 L 22 6 Z" fill="#52b788"/><path d="M 16 8 L 14 6 L 16 6 Z M 28 8 L 26 6 L 28 6 Z" fill="#74c69d"/></svg>',
+    cucumber:  '<svg viewBox="0 0 48 48"><ellipse cx="24" cy="24" rx="6" ry="18" fill="#52b788" transform="rotate(35 24 24)"/><ellipse cx="20" cy="18" rx="2" ry="6" fill="#2d6a4f" transform="rotate(35 20 18)"/><ellipse cx="28" cy="30" rx="2" ry="6" fill="#2d6a4f" transform="rotate(35 28 30)"/><circle cx="13" cy="13" r="1.5" fill="#1b4332"/><circle cx="35" cy="35" r="1.5" fill="#1b4332"/></svg>',
+    squash:    '<svg viewBox="0 0 48 48"><ellipse cx="24" cy="28" rx="14" ry="11" fill="#ffb703"/><path d="M 18 22 Q 24 18 30 22" stroke="#fb8500" stroke-width="1.2" fill="none"/><path d="M 14 28 Q 24 24 34 28" stroke="#fb8500" stroke-width="1.2" fill="none"/><path d="M 18 34 Q 24 30 30 34" stroke="#fb8500" stroke-width="1.2" fill="none"/><path d="M 24 18 L 24 12" stroke="#2d6a4f" stroke-width="2" stroke-linecap="round"/><path d="M 24 12 Q 28 10 30 14" stroke="#2d6a4f" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+    pepper:    '<svg viewBox="0 0 48 48"><path d="M 18 16 Q 14 24 18 34 Q 24 40 30 34 Q 34 24 30 16 Q 24 14 18 16 Z" fill="#dc2626"/><path d="M 22 18 Q 24 16 26 18" fill="#fca5a5" opacity="0.5"/><path d="M 22 14 L 22 10 L 26 10 L 26 14 Z" fill="#2d6a4f"/><path d="M 22 10 L 18 8 M 26 10 L 30 8" stroke="#2d6a4f" stroke-width="1.5" stroke-linecap="round"/></svg>',
+    beet:      '<svg viewBox="0 0 48 48"><circle cx="24" cy="30" r="12" fill="#7e22ce"/><circle cx="24" cy="30" r="7" fill="#a855f7" opacity="0.6"/><path d="M 24 18 L 24 8" stroke="#52b788" stroke-width="2"/><path d="M 24 8 Q 18 4 16 10 Q 22 12 24 8 Z" fill="#52b788"/><path d="M 24 10 Q 30 6 32 12 Q 28 14 24 10 Z" fill="#74c69d"/></svg>',
+    onion:     '<svg viewBox="0 0 48 48"><path d="M 14 24 Q 14 38 24 40 Q 34 38 34 24 Q 34 18 24 18 Q 14 18 14 24 Z" fill="#fef3e0"/><path d="M 20 22 Q 22 32 24 40 M 28 22 Q 26 32 24 40" stroke="#a07b50" stroke-width="0.8" fill="none"/><path d="M 22 18 L 22 8 M 26 18 L 26 6 M 24 18 L 24 4" stroke="#52b788" stroke-width="2" stroke-linecap="round"/></svg>',
+    carrot:    '<svg viewBox="0 0 48 48"><path d="M 18 18 L 30 18 L 26 40 Z" fill="#fb8500"/><path d="M 21 22 L 25 22 M 21 28 L 27 28 M 22 34 L 26 34" stroke="#9a3412" stroke-width="0.8"/><path d="M 22 18 L 20 8 M 26 18 L 26 6 M 24 18 L 24 4 M 28 18 L 30 8" stroke="#52b788" stroke-width="2" stroke-linecap="round"/></svg>',
+    parsnip:   '<svg viewBox="0 0 48 48"><path d="M 18 18 L 30 18 L 26 40 Z" fill="#fef3e0" stroke="#a07b50" stroke-width="1.2"/><path d="M 21 22 L 25 22 M 21 28 L 27 28 M 22 34 L 26 34" stroke="#a07b50" stroke-width="0.8"/><path d="M 22 18 L 20 8 M 26 18 L 26 6 M 24 18 L 24 4" stroke="#52b788" stroke-width="2" stroke-linecap="round"/></svg>',
+    radish:    '<svg viewBox="0 0 48 48"><circle cx="24" cy="30" r="10" fill="#dc2626"/><circle cx="24" cy="36" r="6" fill="#fca5a5" opacity="0.5"/><path d="M 22 20 L 22 8 M 26 20 L 26 6 M 24 20 L 24 4" stroke="#52b788" stroke-width="2" stroke-linecap="round"/><path d="M 24 38 L 24 44" stroke="#fef3e0" stroke-width="1.5"/></svg>',
+    potato:    '<svg viewBox="0 0 48 48"><ellipse cx="24" cy="26" rx="14" ry="11" fill="#a07b50"/><circle cx="18" cy="22" r="1.5" fill="#6b4423"/><circle cx="28" cy="20" r="1.5" fill="#6b4423"/><circle cx="22" cy="30" r="1.5" fill="#6b4423"/><circle cx="30" cy="28" r="1.5" fill="#6b4423"/><ellipse cx="20" cy="26" rx="3" ry="1" fill="#6b4423" opacity="0.4"/></svg>',
+    blueberry: '<svg viewBox="0 0 48 48"><circle cx="20" cy="22" r="6" fill="#3b5bdb"/><circle cx="28" cy="20" r="6" fill="#1e3a8a"/><circle cx="22" cy="30" r="6" fill="#3b5bdb"/><circle cx="30" cy="30" r="5" fill="#1e3a8a"/><circle cx="20" cy="22" r="2" fill="#1e3a8a" opacity="0.4"/><path d="M 18 16 L 16 12 L 18 14 L 20 12" fill="none" stroke="#52b788" stroke-width="1.5" stroke-linecap="round"/></svg>'
+  };
+
+  function buildPlantGrid() {
+    const grid = document.getElementById('plantGrid');
+    grid.innerHTML = plants.map(p => `
+      <button class="plant-card" data-id="${p.id}">
+        <div class="plant-icon">${plantIcons[p.icon] || ''}</div>
+        <div class="plant-name">${p.name}</div>
+        <div class="plant-pill pill-${p.verdict}">${p.verdict}</div>
+      </button>
+    `).join('');
+    grid.querySelectorAll('.plant-card').forEach(card => {
+      card.addEventListener('click', () => selectPlant(card.dataset.id));
+    });
+  }
+
+  function selectPlant(id) {
+    const p = plants.find(x => x.id === id);
+    if (!p) return;
+    document.querySelectorAll('.plant-card').forEach(c => c.classList.remove('selected'));
+    const card = document.querySelector(`.plant-card[data-id="${id}"]`);
+    if (card) card.classList.add('selected');
+
+    const verdictText = {
+      thrives: 'will thrive in this soil',
+      maybe: 'is a maybe',
+      avoid: 'should be avoided this year'
+    }[p.verdict];
+
+    const detail = document.getElementById('plantDetail');
+    detail.innerHTML = `
+      <div class="plant-detail verdict-${p.verdict}">
+        <h3>
+          ${p.name} <span class="plant-pill pill-${p.verdict}">${p.verdict}</span>
+        </h3>
+        <p><strong>${p.name} ${verdictText}.</strong> ${p.reason}</p>
+      </div>
+    `;
+  }
+
+  /* ============ INIT + EVENTS ============ */
+
+  document.getElementById('back-btn').addEventListener('click', () => {
+    if (currentStep > 1) showStep(currentStep - 1);
+  });
+  document.getElementById('next-btn').addEventListener('click', () => {
+    if (currentStep === TOTAL_STEPS) showStep(1);
+    else showStep(currentStep + 1);
+  });
+  document.querySelectorAll('.section-tab').forEach(tab => {
+    tab.addEventListener('click', () => showStep(parseInt(tab.dataset.jump)));
+  });
+  document.getElementById('explain-btn').addEventListener('click', toggleExplain);
+
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
+    if (e.key === 'ArrowRight' && currentStep < TOTAL_STEPS) { e.preventDefault(); showStep(currentStep + 1); }
+    if (e.key === 'ArrowLeft' && currentStep > 1) { e.preventDefault(); showStep(currentStep - 1); }
+  });
+
+  buildNutrientBoard();
+  buildPlotMap();
+  buildPlantGrid();
+  selectPlot('10G');
+  selectPlant('tomato');
+
+  // Honor #step-N URL fragment on load
+  const m = window.location.hash.match(/^#step-(\d+)$/);
+  if (m) {
+    const n = parseInt(m[1]);
+    if (n >= 1 && n <= TOTAL_STEPS) showStep(n);
+    else showStep(1);
+  } else {
+    showStep(1);
+  }
+})();
+</script>
+
+</body>
+</html>
